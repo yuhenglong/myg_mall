@@ -1,0 +1,116 @@
+{
+  "app": {
+    "signingConfigs": [
+      {
+        "name": "default",
+        "type": "HarmonyOS",
+        "material": {
+          "certpath": "/Users/yuhenglong/.ohos/config/default_myg_mall2_fHlBpx-JPtKbQsJpLsYFmcTmmIg-vucGKdp69ROJ-QI=.cer",
+          "keyAlias": "debugKey",
+          "keyPassword": "0000001B76DCB22D3958B11E378082751DE977464243D2DD4ECF618D8E4C228E61600FECC08E8CBBCA945E",
+          "profile": "/Users/yuhenglong/.ohos/config/default_myg_mall2_fHlBpx-JPtKbQsJpLsYFmcTmmIg-vucGKdp69ROJ-QI=.p7b",
+          "signAlg": "SHA256withECDSA",
+          "storeFile": "/Users/yuhenglong/.ohos/config/default_myg_mall2_fHlBpx-JPtKbQsJpLsYFmcTmmIg-vucGKdp69ROJ-QI=.p12",
+          "storePassword": "0000001BFCEB262D1452A027195C1C9A7D9E41E6202CDCBD99D7BC117BD2C3E3009C2F23E2324FF3FCCAA6"
+        }
+      }
+    ],
+    "products": [
+      {
+        "name": "default",
+        "signingConfig": "default",
+        "targetSdkVersion": "6.0.1(21)",
+        "compatibleSdkVersion": "5.0.4(16)",
+        "runtimeOS": "HarmonyOS",
+        "buildOption": {
+          "strictMode": {
+            "caseSensitiveCheck": true,
+            "useNormalizedOHMUrl": true
+          }
+        }
+      }
+    ],
+    "buildModeSet": [
+      {
+        "name": "debug",
+      },
+      {
+        "name": "release"
+      }
+    ]
+  },
+  "modules": [
+    {
+      "name": "phone",
+      "srcPath": "./products/phone",
+      "targets": [
+        {
+          "name": "default",
+          "applyToProducts": [
+            "default"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "basic",
+      "srcPath": "./commons/basic",
+      "targets": [
+        {
+          "name": "default",
+          "applyToProducts": [
+            "default"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "cart",
+      "srcPath": "./features/cart",
+      "targets": [
+        {
+          "name": "default",
+          "applyToProducts": [
+            "default"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "category",
+      "srcPath": "./features/category",
+      "targets": [
+        {
+          "name": "default",
+          "applyToProducts": [
+            "default"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "home",
+      "srcPath": "./features/home",
+      "targets": [
+        {
+          "name": "default",
+          "applyToProducts": [
+            "default"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "my",
+      "srcPath": "./features/my",
+      "targets": [
+        {
+          "name": "default",
+          "applyToProducts": [
+            "default"
+          ]
+        }
+      ]
+    }
+  ]
+}
