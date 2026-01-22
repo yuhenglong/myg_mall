@@ -1,4 +1,4 @@
-import { TabItem } from 'basic'
+import { Logger, TabItem } from 'basic'
 import { CartView } from 'cart'
 import { CategoryView } from 'category'
 import { HomeView } from 'home'
@@ -16,6 +16,13 @@ struct Index {
     { text: '购物袋', normal: $r('app.media.ic_public_cart_normal'), active: $r('app.media.ic_public_cart_active') },
     { text: '我的', normal: $r('app.media.ic_public_my_normal'), active: $r('app.media.ic_public_my_active') },
   ]
+
+  aboutToAppear(): void {
+    Logger.info({
+      name:'鸿蒙',
+      age:9
+    })
+  }
 
   @Builder
   getTabItemBuilder(item: TabItem, index: number) {
