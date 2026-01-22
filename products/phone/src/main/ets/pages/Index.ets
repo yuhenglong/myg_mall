@@ -1,4 +1,8 @@
 import { TabItem } from 'basic'
+import { CartView } from 'cart'
+import { CategoryView } from 'category'
+import { HomeView } from 'home'
+import { MyView } from 'my'
 
 
 @Entry
@@ -20,7 +24,7 @@ struct Index {
         .width(24)
         .aspectRatio(1)
       Text(item.text)// 跨 HSP 访问资源，需要在 oh-package.json5中导入
-        // .fontColor($r('[basic].color.black'))
+        .fontColor($r('[basic].color.black'))
         .fontSize(12)
     }
     .justifyContent(FlexAlign.SpaceEvenly)
@@ -31,7 +35,15 @@ struct Index {
     Tabs({ barPosition: BarPosition.End, index: $$this.activeIndex }) {
       ForEach(this.list, (item: TabItem, index: number) => {
         TabContent() {
-
+          if (index == 0) {
+            HomeView()
+          } else if (index == 1) {
+            CategoryView()
+          } else if (index == 2) {
+            CartView()
+          } else {
+            MyView()
+          }
         }
         .tabBar(this.getTabItemBuilder(item, index))
       })
@@ -39,3 +51,4 @@ struct Index {
     .scrollable(false)
   }
 }
+
