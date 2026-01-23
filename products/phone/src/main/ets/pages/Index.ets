@@ -1,13 +1,16 @@
-import { Logger, TabItem } from 'basic'
+import { AppBreakPoint, BreakPointType, Logger, TabItem } from 'basic'
 import { CartView } from 'cart'
 import { CategoryView } from 'category'
 import { HomeView } from 'home'
 import { MyView } from 'my'
+import { AppStorageV2 } from '@kit.ArkUI'
 
 
 @Entry
 @ComponentV2
 struct Index {
+  breakObj: AppBreakPoint = AppStorageV2.connect(AppBreakPoint,() => new AppBreakPoint())!
+
   @Local
   activeIndex: number = 0
   list: TabItem[] = [
@@ -39,7 +42,11 @@ struct Index {
   }
 
   build() {
-    Tabs({ barPosition: BarPosition.End, index: $$this.activeIndex }) {
+    Tabs({ barPosition: new BreakPointType({
+      sm: BarPosition.End,
+      md: BarPosition.End,
+      lg: BarPosition.Start
+    }).getValue(this.breakObj.breakPoint), index: $$this.activeIndex }) {
       ForEach(this.list, (item: TabItem, index: number) => {
         TabContent() {
           if (index == 0) {
@@ -56,6 +63,16 @@ struct Index {
       })
     }
     .scrollable(false)
+    .barHeight(new BreakPointType({
+      sm: 60,
+      md: 60,
+      lg: 220
+    }).getValue(this.breakObj.breakPoint))
+    .vertical(new BreakPointType({
+      sm: false,
+      md: false,
+      lg: true
+    }).getValue(this.breakObj.breakPoint))
   }
 }
 
