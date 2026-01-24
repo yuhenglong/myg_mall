@@ -182,9 +182,20 @@ export struct HomeView {
 
 
         // 分类
-        Column({ space: 10 }) {
+        Column({
+          space: new BreakPointType({
+            sm: 14,
+            md: 36,
+            lg: 72
+          }).getValue(this.breakObj.breakPoint)
+        }) {
           // 分类
-          List({ space: 16 }) {
+          List({ space: new BreakPointType({
+              sm: 14,
+              md: 36,
+              lg: 72
+            }).getValue(this.breakObj.breakPoint)
+          }) {
             ForEach(this.categories, (item: CategoryItem) => {
               ListItem() {
                 Column() {
@@ -274,7 +285,13 @@ export struct HomeView {
             Image($r('app.media.home_new'))
               .width(146)
               .height(19)
-            List({ space: 10 }) {
+            List({
+              space: new BreakPointType({
+                sm: 14,
+                md: 36,
+                lg: 72
+              }).getValue(this.breakObj.breakPoint)
+            }) {
               ForEach(this.newGoods, (item: HDMGoodsItem) => {
                 ListItem() {
                   HDMDiscountGoods({ type: DiscountType.NEW, goods: item })
@@ -301,7 +318,13 @@ export struct HomeView {
               }
             })
           }
-          .columnsTemplate('1fr 1fr')
+          .columnsTemplate(
+            new BreakPointType({
+              sm: "1fr 1fr",
+              md: "1fr 1fr 1fr",
+              lg: "1fr 1fr 1fr 1fr"
+            }).getValue(this.breakObj.breakPoint)
+          )
           .columnsGap(8)
           .rowsGap(10)
 
