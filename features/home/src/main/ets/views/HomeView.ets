@@ -1,11 +1,13 @@
-import { CategoryItem, HDMGoodsItem } from 'basic'
+import { AppBreakPoint, BreakPointEnum, BreakPointType, CategoryItem, HDMGoodsItem } from 'basic'
 import { HDMDiscountGoods, HDMGoods } from '../components'
 import { Banner, Params, DiscountType } from '../viewmodels'
+import { AppStorageV2 } from '@kit.ArkUI'
 
 
 @ComponentV2
 export struct HomeView {
-  // 轮播图
+  // 获取断点值
+  breakObj: AppBreakPoint = AppStorageV2.connect(AppBreakPoint,() => new AppBreakPoint())!
   // 轮播图
   @Local
   banners: Banner[] = []
@@ -135,15 +137,28 @@ export struct HomeView {
               Image(item.imgUrl)
             })
           }
+          .displayCount(new BreakPointType({
+            sm:1,
+            md:2,
+            lg:3
+          }).getValue(this.breakObj.breakPoint))
           .indicator(
+            this.breakObj.breakPoint === BreakPointEnum.SM ?
             DotIndicator.dot()
               .itemWidth(8)
               .itemHeight(4)
               .color('#33191919')
               .selectedItemWidth(24)
               .selectedItemHeight(4)
-              .selectedColor('#191919')
+              .selectedColor('#191919') :
+              false
           )
+          // 设置子组建的间距
+          .itemSpace(new BreakPointType({
+            sm: 0,
+            md: 10,
+            lg: 20
+          }).getValue(this.breakObj.breakPoint))
 
           Row() {
             Row({ space: 4 }) {
