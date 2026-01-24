@@ -1,6 +1,7 @@
 import { Context } from "@kit.AbilityKit"
 import { AppStorageV2, display, window } from "@kit.ArkUI"
-import { AppBreakPoint, BreakPointEnum } from "./index"
+import { AppBreakPoint, AppSafeArea, BreakPointEnum } from "./index"
+import { deviceInfo } from "@kit.BasicServicesKit"
 
 export class ScreenManager {
   ctx?: Context
@@ -30,6 +31,33 @@ export class ScreenManager {
     const app = AppStorageV2.connect(AppBreakPoint, () => new AppBreakPoint())!
     app.breakPoint = breakPoint // 将断点值存入到全局状态
   }
+
+  // 全屏
+  async full() {
+    const win = await this.getWin()
+    win.setWindowLayoutFullScreen(true)
+    this.setAreaHeight(deviceInfo.deviceType === "2in1" ? 0 :
+      px2vp(win.getWindowAvoidArea(window.AvoidAreaType.TYPE_SYSTEM).topRect.height),
+      px2vp(deviceInfo.deviceType === "2in1" ? 0 :
+        win.getWindowAvoidArea(window.AvoidAreaType.TYPE_NAVIGATION_INDICATOR).bottomRect.height))
+    // 顶部安全区高度
+    // 底部安全区高度
+  }
+
+  // 退出全屏
+  async exitFull() {
+    const win = await this.getWin()
+    win.setWindowLayoutFullScreen(false)
+    this.setAreaHeight(0, 0)
+  }
+
+  // 设置安全区高度
+  setAreaHeight(top: number, bottom: number) {
+    const app = AppStorageV2.connect(AppSafeArea, () => new AppSafeArea())!
+    app.topHeight = top
+    app.bottomHeight = bottom
+  }
+
 
   // 取消注册
   async unRegisterWindowSizeChange() {

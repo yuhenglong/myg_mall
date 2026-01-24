@@ -1,4 +1,4 @@
-import { AppBreakPoint, BreakPointType, Logger, TabItem } from 'basic'
+import { AppBreakPoint, AppSafeArea, BreakPointType, Logger, TabItem } from 'basic'
 import { CartView } from 'cart'
 import { CategoryView } from 'category'
 import { HomeView } from 'home'
@@ -10,6 +10,7 @@ import { AppStorageV2 } from '@kit.ArkUI'
 @ComponentV2
 struct Index {
   breakObj: AppBreakPoint = AppStorageV2.connect(AppBreakPoint,() => new AppBreakPoint())!
+  safeArea: AppSafeArea = AppStorageV2.connect(AppSafeArea, () => new AppSafeArea())!
 
   @Local
   activeIndex: number = 0
@@ -73,6 +74,15 @@ struct Index {
       md: false,
       lg: true
     }).getValue(this.breakObj.breakPoint))
+    .animationDuration(new BreakPointType({
+      sm:300,
+      md:300,
+      lg:0
+    }).getValue(this.breakObj.breakPoint)
+    )
+    .padding({
+      bottom: this.safeArea.bottomHeight
+    })
   }
 }
 

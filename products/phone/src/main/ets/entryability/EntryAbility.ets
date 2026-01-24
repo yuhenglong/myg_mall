@@ -28,6 +28,9 @@ export default class EntryAbility extends UIAbility {
     screenManager.registerWindowSizeChange() //拿到屏幕变化
     //注册获取断点值
 
+    // 设置沉浸式全屏
+    screenManager.full()
+
     windowStage.loadContent('pages/Index', (err) => {
       if (err.code) {
         hilog.error(DOMAIN, 'testTag', 'Failed to load the content. Cause: %{public}s', JSON.stringify(err));
@@ -39,6 +42,10 @@ export default class EntryAbility extends UIAbility {
 
   onWindowStageDestroy(): void {
     screenManager.unRegisterWindowSizeChange() // 取消注册获取断点
+
+    // 取消沉浸式全屏
+    screenManager.exitFull()
+
     // Main window is destroyed, release UI related resources
     hilog.info(DOMAIN, 'testTag', '%{public}s', 'Ability onWindowStageDestroy');
   }

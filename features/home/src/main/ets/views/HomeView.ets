@@ -1,4 +1,4 @@
-import { AppBreakPoint, BreakPointEnum, BreakPointType, CategoryItem, HDMGoodsItem } from 'basic'
+import { AppBreakPoint, AppSafeArea, BreakPointEnum, BreakPointType, CategoryItem, HDMGoodsItem } from 'basic'
 import { HDMDiscountGoods, HDMGoods } from '../components'
 import { Banner, Params, DiscountType } from '../viewmodels'
 import { AppStorageV2 } from '@kit.ArkUI'
@@ -8,6 +8,8 @@ import { AppStorageV2 } from '@kit.ArkUI'
 export struct HomeView {
   // 获取断点值
   breakObj: AppBreakPoint = AppStorageV2.connect(AppBreakPoint,() => new AppBreakPoint())!
+  //获取安全区域
+  safeArea: AppSafeArea = AppStorageV2.connect(AppSafeArea, () => new AppSafeArea())!
   // 轮播图
   @Local
   banners: Banner[] = []
@@ -176,7 +178,7 @@ export struct HomeView {
             .borderRadius(20)
             .padding({ left: 12 })
           }
-          .padding({ left: 16, right: 16 })
+          .padding({ left: 16, right: 16, top: this.safeArea.topHeight })
         }
         .width('100%')
 
