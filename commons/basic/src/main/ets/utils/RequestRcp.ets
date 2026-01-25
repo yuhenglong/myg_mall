@@ -1,11 +1,42 @@
 import { rcp } from '@kit.RemoteCommunicationKit'
 import { GlobalVariable } from '../constants'
+// 请求拦截器
+class RcpRequestInterceptor implements rcp.Interceptor {
+  // context上下文 -请求上下文
+  async intercept(context: rcp.RequestContext, next: rcp.RequestHandler): Promise<rcp.Response> {
+    // to from next(必须要执行的函数)
+    // next传递到下一个
+    // throw new Error("Method not implemented.");
+    // axios返回类型无法更改！！！
+    // 请求拦截器
+    // TODO 注入token
+    return next.handle(context) // 将结构返回下一个执行链
+  }
+}
+//响应拦截器
+class RcpResponseInterceptor implements rcp.Interceptor {
+  // context上下文 -请求上下文
+  async intercept(context: rcp.RequestContext, next: rcp.RequestHandler): Promise<rcp.Response> {
+    // to from next(必须要执行的函数)
+    // next传递到下一个
+    // throw new Error("Method not implemented.");
+    // axios返回类型无法更改！！！
+    // 请求拦截器
+    const res = await next.handle(context) // 将结构返回下一个执行链
+    // if(res.statusCode === 401) {
+    //
+    // }
+    return res
+  }
+}
 
 //创建一个会话实例
 const instance = rcp.createSession({
   baseAddress: GlobalVariable.BASE_URL,
   interceptors: [
       // 配置请求和响应拦截
+    new RcpRequestInterceptor(),
+    new RcpResponseInterceptor()
   ], //配置多个拦截器,不区分请求和响应
   requestConfiguration:{
     transfer:{

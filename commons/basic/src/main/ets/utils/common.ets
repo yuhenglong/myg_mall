@@ -45,3 +45,10 @@ export class AppSafeArea {
   @Trace
   bottomHeight: number = 0
 }
+
+// 定义统一返回的结构体
+export interface ResponseData<T>{
+  code: string;
+  msg: string;
+  result: T
+}
