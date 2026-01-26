@@ -2,6 +2,7 @@ import { AppBreakPoint, AppSafeArea, BreakPointEnum, BreakPointType, CategoryIte
 import { HDMDiscountGoods, HDMGoods } from '../components'
 import { Banner, Params, DiscountType } from '../viewmodels'
 import { AppStorageV2 } from '@kit.ArkUI'
+import { getBannerAPI, getCategoryAPI, getHomeNewAPI, getHotResultAPI, getInVogueAPI, getOneStopAPI } from '../api'
 
 
 @ComponentV2
@@ -31,102 +32,18 @@ export struct HomeView {
   @Local
   recommendGoods: HDMGoodsItem[] = []
 
-  // 生成模拟数据
-  mockData() {
-    this.banners = new Array(6).fill({
-      id: "42",
-      imgUrl: "https://yjy-teach-oss.oss-cn-beijing.aliyuncs.com/meikou/banner/nuandong_sj.png",
-      hrefUrl: "/category/1181622006",
-      type: "1"
-    })
-
-    this.categories = new Array(10).fill({
-      id: "1181622001",
-      name: "气质女装",
-      picture: "https://yjy-teach-oss.oss-cn-beijing.aliyuncs.com/meikou/c1/qznz.png"
-    })
-
-    this.saleGoods = new Array(6).fill({
-      "id": "1111002",
-      "name": "剪出精致感，金致圆柄复古剪刀",
-      "desc": "轻薄设计，简约大方",
-      "price": "9.90",
-      "picture": "https://yanxuan-item.nosdn.127.net/4c6a9c8a579b00e5e9c7b002d15a33a2.jpg",
-      "orderNum": 172
-    },)
-
-    this.hotGoods = new Array(8).fill({
-      "id": "1135059",
-      "name": "手工八年老陈醋500毫升",
-      "desc": "地道醇香，醋酸浓郁",
-      "price": "30.00",
-      "picture": "https://yanxuan-item.nosdn.127.net/77da20e77b02830a26f931901ac1a9e0.png",
-      "orderNum": 147
-    },)
-    this.oneGoods = new Array(8).fill({
-      "id": "1135079",
-      "name": "免浸泡，12种谷物一次同享，五谷米400克",
-      "desc": "无需浸泡，同煮同熟",
-      "price": "9.90",
-      "picture": "https://yanxuan-item.nosdn.127.net/bfe70bd66efe94f2f18061c707d2a097.png",
-      "orderNum": 144
-    })
-    this.newGoods = new Array(8).fill({
-      "id": "4027998",
-      "name": "亮碟多效合一洗涤块495g",
-      "desc": "洗碗机专用，强力去污",
-      "price": "69.90",
-      "picture": "https://yanxuan-item.nosdn.127.net/e07c2b63765cf9f4a46d489c6e09c1c1.jpg",
-      "orderNum": 643
-    })
-
-    this.recommendGoods = new Array(8).fill({
-      "id": "4033959",
-      "name": "3秒快速拆琴轻松保养odin奥丁12半音阶口琴",
-      "price": 329,
-      "picture": "https://yanxuan-item.nosdn.127.net/937a8e46a9284e8f7e00e13911ecfbe7.png",
-      "payCount": 0
-    })
-  }
-
   aboutToAppear(): void {
-    // mock数据
-    this.mockData()
-
+    this.getHomeData()
   }
 
-  @Builder
-  DiscountBuilder(params: Params) {
-
-    Column() {
-      Row({ space: 10 }) {
-        Text(params.title)
-          .fontColor($r('[basic].color.black'))
-          .fontSize(14)
-        Text(params.subTitle)
-          .fontColor($r('[basic].color.text'))
-          .fontSize(11)
-      }
-      .width('100%')
-      .margin({ bottom: 10 })
-
-      List({ space: 10 }) {
-        ForEach(params.list, (item: HDMGoodsItem) => {
-          ListItem() {
-            HDMDiscountGoods({ type: DiscountType.DISCOUNT, goods: item })
-          }
-        })
-      }
-      .width('100%')
-      .height(116)
-      .scrollBar(BarState.Off)
-      .listDirection(Axis.Horizontal)
-    }
-    .height(160)
-    .layoutWeight(1)
-    .padding(10)
-    .backgroundColor(params.bg)
-    .borderRadius(8)
+  async getHomeData(){
+    this.banners = await getBannerAPI()
+    this.categories = await getCategoryAPI()
+    const result = await getHotResultAPI()
+    this.saleGoods = result.subTypes?.[0]?.goodsItems?.items || []
+    this.hotGoods = (await getInVogueAPI()).subTypes?.[0]?.goodsItems?.items || []
+    this.oneGoods = (await getOneStopAPI()).subTypes?.[0]?.goodsItems?.items || []
+    this.newGoods = await getHomeNewAPI()
   }
 
   build() {
@@ -340,5 +257,39 @@ export struct HomeView {
       }
     }
     .scrollBar(BarState.Off)
+  }
+
+  @Builder
+  DiscountBuilder(params: Params) {
+
+    Column() {
+      Row({ space: 10 }) {
+        Text(params.title)
+          .fontColor($r('[basic].color.black'))
+          .fontSize(14)
+        Text(params.subTitle)
+          .fontColor($r('[basic].color.text'))
+          .fontSize(11)
+      }
+      .width('100%')
+      .margin({ bottom: 10 })
+
+      List({ space: 10 }) {
+        ForEach(params.list, (item: HDMGoodsItem) => {
+          ListItem() {
+            HDMDiscountGoods({ type: DiscountType.DISCOUNT, goods: item })
+          }
+        })
+      }
+      .width('100%')
+      .height(116)
+      .scrollBar(BarState.Off)
+      .listDirection(Axis.Horizontal)
+    }
+    .height(160)
+    .layoutWeight(1)
+    .padding(10)
+    .backgroundColor(params.bg)
+    .borderRadius(8)
   }
 }
