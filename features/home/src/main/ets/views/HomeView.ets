@@ -1,4 +1,4 @@
-import { AppBreakPoint, AppSafeArea, BreakPointEnum, BreakPointType, CategoryItem, HDMGoodsItem } from 'basic'
+import { AppBreakPoint, AppSafeArea, BreakPointEnum, BreakPointType, CategoryItem, HDMGoodsItem, Logger } from 'basic'
 import { HDMDiscountGoods, HDMGoods } from '../components'
 import { Banner, Params, DiscountType } from '../viewmodels'
 import { AppStorageV2 } from '@kit.ArkUI'
@@ -37,13 +37,36 @@ export struct HomeView {
   }
 
   async getHomeData(){
-    this.banners = await getBannerAPI()
-    this.categories = await getCategoryAPI()
-    const result = await getHotResultAPI()
-    this.saleGoods = result.subTypes?.[0]?.goodsItems?.items || []
-    this.hotGoods = (await getInVogueAPI()).subTypes?.[0]?.goodsItems?.items || []
-    this.oneGoods = (await getOneStopAPI()).subTypes?.[0]?.goodsItems?.items || []
-    this.newGoods = await getHomeNewAPI()
+    // this.banners = await getBannerAPI()
+    // this.categories = await getCategoryAPI()
+    // const result = await getHotResultAPI()
+    // this.saleGoods = result.subTypes?.[0]?.goodsItems?.items || []
+    // this.hotGoods = (await getInVogueAPI()).subTypes?.[0]?.goodsItems?.items || []
+    // this.oneGoods = (await getOneStopAPI()).subTypes?.[0]?.goodsItems?.items || []
+    // this.newGoods = await getHomeNewAPI()
+    const result =
+      await Promise.allSettled([getBannerAPI(), getCategoryAPI(), getHotResultAPI(), getInVogueAPI(), getOneStopAPI(),
+        getHomeNewAPI()])
+    Logger.info(result)
+    if (result[0].status === "fulfilled") {
+      this.banners = result[0].value
+    }
+    if (result[1].status === "fulfilled") {
+      this.categories = result[1].value
+    }
+    if (result[2].status === "fulfilled") {
+      this.saleGoods = result[2].value?.subTypes?.[0]?.goodsItems?.items || []
+      //this.saleGoods = result[2].value
+    }
+    if (result[3].status === "fulfilled") {
+      this.hotGoods = result[3].value?.subTypes?.[0]?.goodsItems?.items || []
+    }
+    if (result[4].status === "fulfilled") {
+      this.oneGoods = result[4].value?.subTypes?.[0]?.goodsItems?.items || []
+    }
+    if (result[5].status === "fulfilled") {
+      this.newGoods = result[5].value
+    }
   }
 
   build() {
