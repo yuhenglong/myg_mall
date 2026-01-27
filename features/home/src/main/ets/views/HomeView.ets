@@ -32,8 +32,8 @@ export struct HomeView {
   // 新鲜好物
   @Local
   newGoods: HDMGoodsItem[] = []
-  // @Local
-  // recommendGoods: HDMGoodsItem[] = []
+  @Local
+  recommendGoods: HDMGoodsItem[] = []
   @Local
   yOffset: number = 0
   @Local
@@ -87,7 +87,8 @@ export struct HomeView {
       this.newGoods = result[5].value
     }
     if (result[6].status === "fulfilled") {
-      this.dataSource.loadData(result[6].value as HDMGoodsItem[])
+      // this.dataSource.loadData(result[6].value as HDMGoodsItem[])
+      this.recommendGoods = result[6].value
     }
   }
 
@@ -104,7 +105,8 @@ export struct HomeView {
         message:'没有更多数据了'
       })
     }
-    this.dataSource.loadData(list)
+    // this.dataSource.loadData(list)
+    this.recommendGoods = list
   }
 
   build() {
@@ -293,11 +295,18 @@ export struct HomeView {
 
             // 推荐商品
             WaterFlow() {
-              LazyForEach(this.dataSource, (item: HDMGoodsItem) => {
-                FlowItem() {
-                  HDMGoods({ goods: item })
+              // LazyForEach(this.dataSource, (item: HDMGoodsItem) => {
+              //   FlowItem() {
+              //     HDMGoods({ goods: item })
+              //   }
+              // })
+              Repeat<HDMGoodsItem>(this.recommendGoods).each((obj:RepeatItem<HDMGoodsItem>) => {
+                FlowItem(){
+                  HDMGoods({ goods: obj.item })
                 }
               })
+                .virtualScroll()
+                .key((item: HDMGoodsItem, index: number) => `${index}_${JSON.stringify(item)}`)
             }
             .onReachEnd(() => {
               if (!this.isReachLoad && !this.isFinished) {
