@@ -300,13 +300,15 @@ export struct HomeView {
               })
             }
             .onReachEnd(() => {
-
-
               if (!this.isReachLoad && !this.isFinished) {
                 this.isReachLoad = true
                 this.getRecommend()
                 this.isReachLoad = false
               }
+            })
+            .nestedScroll({
+              scrollForward: NestedScrollMode.PARENT_FIRST,
+              scrollBackward: NestedScrollMode.SELF_FIRST
             })
             .height('100%')
             .columnsTemplate(
