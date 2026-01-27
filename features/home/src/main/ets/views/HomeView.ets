@@ -1,8 +1,11 @@
-import { AppBreakPoint, AppSafeArea, BreakPointEnum, BreakPointType, CategoryItem, HDMGoodsItem, Logger } from 'basic'
+import { AppBreakPoint, AppSafeArea, BreakPointEnum, BreakPointType, CategoryItem, HDMGoodsItem,
+  ListDataSource,
+  Logger } from 'basic'
 import { HDMDiscountGoods, HDMGoods } from '../components'
 import { Banner, Params, DiscountType } from '../viewmodels'
-import { AppStorageV2 } from '@kit.ArkUI'
-import { getBannerAPI, getCategoryAPI, getHomeNewAPI, getHotResultAPI, getInVogueAPI, getOneStopAPI } from '../api'
+import { AppStorageV2, promptAction, PromptAction } from '@kit.ArkUI'
+import { getBannerAPI, getCategoryAPI, getHomeNewAPI, getHotResultAPI, getInVogueAPI, getOneStopAPI,
+  getRecommendAPI } from '../api'
 
 
 @ComponentV2
@@ -29,12 +32,22 @@ export struct HomeView {
   // 新鲜好物
   @Local
   newGoods: HDMGoodsItem[] = []
-  @Local
-  recommendGoods: HDMGoodsItem[] = []
+  // @Local
+  // recommendGoods: HDMGoodsItem[] = []
   @Local
   yOffset: number = 0
   @Local
   searchOpacity: number = 1 // 搜索框透明度
+  @Local
+  page: number = 1 //页码
+  @Local
+  isReachLoad: boolean = false // 是否已经请求完成
+  @Local
+  isFinished :boolean = false // 是否已经没有数据
+
+  // LazyForeach
+  // 创建数据源对象
+  dataSource: ListDataSource<HDMGoodsItem> = new ListDataSource()
 
   aboutToAppear(): void {
     this.getHomeData()
@@ -42,8 +55,18 @@ export struct HomeView {
 
   async getHomeData(){
     const result =
-      await Promise.allSettled([getBannerAPI(), getCategoryAPI(), getHotResultAPI(), getInVogueAPI(), getOneStopAPI(),
-        getHomeNewAPI()])
+      await Promise.allSettled([
+        getBannerAPI(),
+        getCategoryAPI(),
+        getHotResultAPI(),
+        getInVogueAPI(),
+        getOneStopAPI(),
+        getHomeNewAPI(),
+        getRecommendAPI({
+          limit: this.page * 8
+        })
+      ])
+
     if (result[0].status === "fulfilled") {
       this.banners = result[0].value
     }
@@ -63,6 +86,25 @@ export struct HomeView {
     if (result[5].status === "fulfilled") {
       this.newGoods = result[5].value
     }
+    if (result[6].status === "fulfilled") {
+      this.dataSource.loadData(result[6].value as HDMGoodsItem[])
+    }
+  }
+
+  // 获取推荐数据
+  async getRecommend(){
+    const list = await getRecommendAPI({
+      limit: this.page * 8
+    })
+    if (list.length === this.page * 8) {
+      this.page ++
+    }else{
+      this.isFinished = true
+      promptAction.showToast({
+        message:'没有更多数据了'
+      })
+    }
+    this.dataSource.loadData(list)
   }
 
   build() {
@@ -251,12 +293,22 @@ export struct HomeView {
 
             // 推荐商品
             WaterFlow() {
-              ForEach(this.recommendGoods, (item: HDMGoodsItem) => {
+              LazyForEach(this.dataSource, (item: HDMGoodsItem) => {
                 FlowItem() {
                   HDMGoods({ goods: item })
                 }
               })
             }
+            .onReachEnd(() => {
+
+
+              if (!this.isReachLoad && !this.isFinished) {
+                this.isReachLoad = true
+                this.getRecommend()
+                this.isReachLoad = false
+              }
+            })
+            .height('100%')
             .columnsTemplate(
               new BreakPointType({
                 sm: "1fr 1fr",
@@ -288,6 +340,7 @@ export struct HomeView {
           this.searchOpacity = 1
         }
       })
+
 
       // 放置一个搜索元素
       Row() {
