@@ -35,7 +35,10 @@ export struct SearchView {
           .caretStyle({ color: $r('[basic].color.red') })
           .defaultFocus(true)
           .onSubmit((value) => {
-
+            HMRouterMgr.push({
+              pageUrl: PAGE_PATH.SEARCH_RESULT_PAGE,
+              param: { keyword: value }
+            })
           })
 
 
