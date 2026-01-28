@@ -1,3 +1,4 @@
+import { CategoryItem } from "../viewmodels/business";
 import { BreakPointEnum } from "./break_point";
 
 @ObservedV2
@@ -51,4 +52,10 @@ export interface ResponseData<T>{
   code: string;
   msg: string;
   result: T
+}
+
+@ObservedV2
+export class AppCategory {
+  @Trace
+  category: CategoryItem[] = []
 }

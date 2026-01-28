@@ -1,4 +1,6 @@
-import { AppBreakPoint, AppSafeArea, BreakPointEnum, BreakPointType, CategoryItem, HDMGoodsItem,
+import { AppBreakPoint,
+  AppCategory,
+  AppSafeArea, BreakPointEnum, BreakPointType, CategoryItem, HDMGoodsItem,
   HDMLoading,
   ListDataSource,
   Logger } from 'basic'
@@ -81,6 +83,8 @@ export struct HomeView {
     }
     if (result[1].status === "fulfilled") {
       this.categories = result[1].value
+      const app = AppStorageV2.connect(AppCategory,() => new AppCategory())!
+      app.category = result[1].value
     }
     if (result[2].status === "fulfilled") {
       this.saleGoods = result[2].value?.subTypes?.[0]?.goodsItems?.items || []
