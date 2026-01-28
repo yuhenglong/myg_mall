@@ -3,12 +3,14 @@ import { AppBreakPoint,
   AppSafeArea, BreakPointEnum, BreakPointType, CategoryItem, HDMGoodsItem,
   HDMLoading,
   ListDataSource,
-  Logger } from 'basic'
+  Logger,
+  PAGE_PATH} from 'basic'
 import { HDMDiscountGoods, HDMGoods } from '../components'
 import { Banner, Params, DiscountType } from '../viewmodels'
 import { AppStorageV2, promptAction, PromptAction } from '@kit.ArkUI'
 import { getBannerAPI, getCategoryAPI, getHomeNewAPI, getHotResultAPI, getInVogueAPI, getOneStopAPI,
   getRecommendAPI } from '../api'
+import { HMRouterMgr } from '@hadss/hmrouter'
 
 
 @ComponentV2
@@ -177,6 +179,11 @@ export struct HomeView {
                   .height(40)
                   .borderRadius(20)
                   .padding({ left: 12 })
+                  .onClick(() => {
+                    HMRouterMgr.push({
+                      pageUrl: PAGE_PATH.SEARCH_PAGE
+                    })
+                  })
                 }
                 .padding({ left: 16, right: 16, top: this.safeArea.topHeight })
               }
@@ -397,6 +404,11 @@ export struct HomeView {
           .height(40)
           .borderRadius(20)
           .padding({ left: 12 })
+          .onClick(() => {
+            HMRouterMgr.push({
+              pageUrl: PAGE_PATH.SEARCH_PAGE
+            })
+          })
         }
         .opacity(this.searchOpacity)
         .padding({

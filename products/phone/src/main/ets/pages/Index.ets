@@ -1,14 +1,25 @@
-import { AppBreakPoint, AppSafeArea, BreakPointType, Logger, TabItem } from 'basic'
+import { AppBreakPoint, AppSafeArea, BreakPointType, Logger, PAGE_PATH, TabItem } from 'basic'
 import { CartView } from 'cart'
 import { CategoryView } from 'category'
 import { HomeView } from 'home'
 import { MyView } from 'my'
-import { AppStorageV2 } from '@kit.ArkUI'
+import { AppStorageV2, AttributeUpdater } from '@kit.ArkUI'
+import { HMDefaultGlobalAnimator, HMNavigation } from '@hadss/hmrouter'
 
+class MyModifier extends AttributeUpdater<NavigationAttribute> {
+  // 重写原来的方法
+  initializeModifier(instance: NavigationAttribute): void {
+    // instance就是Navigation实例对象
+    instance.mode(NavigationMode.Stack) // 分栏模式去掉
+    instance.titleMode(NavigationTitleMode.Mini) // 标题模式全屏
+    instance.hideTitleBar(true) // 隐藏标题栏
+  }
+}
 
 @Entry
 @ComponentV2
 struct Index {
+  modifier: MyModifier = new MyModifier() // 专门用来修改Navigation特性对象实例
   breakObj: AppBreakPoint = AppStorageV2.connect(AppBreakPoint,() => new AppBreakPoint())!
   safeArea: AppSafeArea = AppStorageV2.connect(AppSafeArea, () => new AppSafeArea())!
 
@@ -43,46 +54,65 @@ struct Index {
   }
 
   build() {
-    Tabs({ barPosition: new BreakPointType({
-      sm: BarPosition.End,
-      md: BarPosition.End,
-      lg: BarPosition.Start
-    }).getValue(this.breakObj.breakPoint), index: $$this.activeIndex }) {
-      ForEach(this.list, (item: TabItem, index: number) => {
-        TabContent() {
-          if (index == 0) {
-            HomeView()
-          } else if (index == 1) {
-            CategoryView()
-          } else if (index == 2) {
-            CartView()
-          } else {
-            MyView()
-          }
+    Column(){
+      // 使用HMNavigation包裹整个根容器 -坑点-HMNavigation外层必须再包一个容器
+      // HMNavigation 是对navigation的封装
+      // 坑点 子页面绝不能出现NavDestination
+      // homePageUrl 是根页面的地址 想要回来直接写整个地址
+      // 想要Navigation的特性
+      HMNavigation({
+        navigationId: PAGE_PATH.MAIN_PAGE_ID, homePageUrl: PAGE_PATH.MAIN_PAGE,
+        options: {
+          standardAnimator: HMDefaultGlobalAnimator.STANDARD_ANIMATOR,
+          dialogAnimator: HMDefaultGlobalAnimator.DIALOG_ANIMATOR,
+          modifier: this.modifier, // 修改Navigation的对象实例
+          // 想要改一些Navigation的属性
+        }}) {
+        Tabs({ barPosition: new BreakPointType({
+          sm: BarPosition.End,
+          md: BarPosition.End,
+          lg: BarPosition.Start
+        }).getValue(this.breakObj.breakPoint), index: $$this.activeIndex }) {
+          ForEach(this.list, (item: TabItem, index: number) => {
+            TabContent() {
+              if (index == 0) {
+                HomeView()
+              } else if (index == 1) {
+                CategoryView()
+              } else if (index == 2) {
+                CartView()
+              } else {
+                MyView()
+              }
+            }
+            .tabBar(this.getTabItemBuilder(item, index))
+          })
         }
-        .tabBar(this.getTabItemBuilder(item, index))
-      })
+        .scrollable(false)
+        .barHeight(new BreakPointType({
+          sm: 60,
+          md: 60,
+          lg: 220
+        }).getValue(this.breakObj.breakPoint))
+        .vertical(new BreakPointType({
+          sm: false,
+          md: false,
+          lg: true
+        }).getValue(this.breakObj.breakPoint))
+        .animationDuration(new BreakPointType({
+          sm:300,
+          md:300,
+          lg:0
+        }).getValue(this.breakObj.breakPoint)
+        )
+        .padding({
+          bottom: this.safeArea.bottomHeight
+        })
+      }
     }
-    .scrollable(false)
-    .barHeight(new BreakPointType({
-      sm: 60,
-      md: 60,
-      lg: 220
-    }).getValue(this.breakObj.breakPoint))
-    .vertical(new BreakPointType({
-      sm: false,
-      md: false,
-      lg: true
-    }).getValue(this.breakObj.breakPoint))
-    .animationDuration(new BreakPointType({
-      sm:300,
-      md:300,
-      lg:0
-    }).getValue(this.breakObj.breakPoint)
-    )
-    .padding({
-      bottom: this.safeArea.bottomHeight
-    })
+
+
+
   }
 }
 
