@@ -1,4 +1,6 @@
-import { AppBreakPoint, AppCategory, AppSafeArea, CategoryItem, CategoryItemChild, HDMNavBar } from 'basic'
+import { AppBreakPoint, AppCategory, AppSafeArea,
+  BreakPointType,
+  CategoryItem, CategoryItemChild, HDMNavBar } from 'basic'
 import { AppStorageV2, promptAction, PromptAction } from '@kit.ArkUI'
 
 @ComponentV2
@@ -50,12 +52,21 @@ export struct CategoryView {
             // 顶部图片
             Image(this.appCategory.category[this.activeIndex].picture)
               .width('100%')
-              .height(136)
+              .height(new BreakPointType({
+                sm :136,
+                md: 316,
+                lg: 316
+              }).getValue(this.breakPointClass.breakPoint)
+              )
               .objectFit(ImageFit.Contain)
               .backgroundColor('#f6f6f6')
               .borderRadius(8)
               .margin({ bottom: 8 })
-            GridRow({ columns: 2, gutter: 8 }) {
+            GridRow({ columns: {
+              sm: 2,
+              md: 3,
+              lg: 4
+            }, gutter: 8 }) {
               // 子分类
               Repeat<CategoryItemChild>(this.appCategory.category[this.activeIndex]?.children || [])
                 .each((obj: RepeatItem<CategoryItemChild>) => {
