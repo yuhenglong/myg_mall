@@ -1,5 +1,5 @@
-import { AppBreakPoint, AppCategory, AppSafeArea, CategoryItem, CategoryItemChild } from 'basic'
-import { AppStorageV2 } from '@kit.ArkUI'
+import { AppBreakPoint, AppCategory, AppSafeArea, CategoryItem, CategoryItemChild, HDMNavBar } from 'basic'
+import { AppStorageV2, promptAction, PromptAction } from '@kit.ArkUI'
 
 @ComponentV2
 export struct CategoryView {
@@ -19,10 +19,14 @@ export struct CategoryView {
 
   build() {
     Column() {
-      // MkNavbar({
-      // })
-      //   .border({ width: { bottom: 0.5 }, color: $r('[basic].color.under') })
-
+      HDMNavBar({
+        title: '分类',
+        showLeftIcon: false,
+        rightIcon: $r('[basic].media.ic_public_search'),
+        onRightClick: () => {
+          promptAction.showToast({message: '点击图标了'})
+        }
+      })
       Row() {
         Column() {
           Repeat<CategoryItem>(this.appCategory.category).each((obj:  RepeatItem<CategoryItem>) => {
