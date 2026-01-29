@@ -1,3 +1,5 @@
+import { GoodsItems } from "."
+
 // 联合类型
 export type SortField = 'publishTime' | 'orderNum' | 'price'
 
@@ -22,8 +24,12 @@ export interface SortCompAttr {
   label: string
 }
 
-
 // 路由参数
 export interface SearchRouterParam {
   keyword: string
+}
+
+// 搜索结果类型
+export interface SearchResult {
+  pageData : GoodsItems
 }

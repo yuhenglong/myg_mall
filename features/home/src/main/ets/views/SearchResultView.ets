@@ -1,9 +1,10 @@
-import { AppBreakPoint, AppSafeArea, BreakPointType, HDMGoodsItem, ListDataSource, PAGE_PATH } from 'basic'
-import { SearchParams, SearchRouterParam, SortCompAttr, SortField, SortMethod } from '../viewmodels'
+import { AppBreakPoint, AppSafeArea, BreakPointType, HDMGoodsItem, ListDataSource, Logger, PAGE_PATH } from 'basic'
+import { GoodsItems, SearchParams, SearchRouterParam, SortCompAttr, SortField, SortMethod } from '../viewmodels'
 import { SearchSortItem } from '../components'
 import { HMRouter, HMRouterMgr } from '@hadss/hmrouter'
 import { AppStorageV2 } from '@kit.ArkUI'
 import { HDMGoods } from '../components'
+import { getSearchResultApi } from '../api/search'
 
 
 @HMRouter({ pageUrl: PAGE_PATH.SEARCH_RESULT_PAGE })
@@ -24,10 +25,26 @@ export struct SearchResultView {
   // 控制器
   scroller = new Scroller()
 
+  @Local
+  list: HDMGoodsItem[] = []
+
   aboutToAppear(): void {
     // 接收上一个页面传过来的参数
     const params = HMRouterMgr.getCurrentParam() as SearchRouterParam
-    AlertDialog.show({message:JSON.stringify(params)})
+    this.params.keyword = params.keyword;
+    this.getSearchResult()
+  }
+
+  // 获取搜索数据的方法
+  async getSearchResult(){
+    const res = await getSearchResultApi({
+      keyword: this.params.keyword,
+      sortField: this.params.sortField,
+      sortMethod: this.params.sortMethod,
+      page: this.params.page,
+      pageSize:this.params.pageSize
+    })
+    this.list = res.pageData.items;
   }
 
   build() {
@@ -87,11 +104,16 @@ export struct SearchResultView {
       .border({ width: { bottom: 0.5 }, color: $r('[basic].color.border') })
 
       WaterFlow({ scroller: this.scroller }) {
-        LazyForEach(this.lazyDataSource, (item: HDMGoodsItem) => {
-          FlowItem() {
-            HDMGoods({ goods: item, smallImage: true })
-          }
+        // LazyForEach(this.lazyDataSource, (item: HDMGoodsItem) => {
+        //   FlowItem() {
+        //     HDMGoods({ goods: item, smallImage: true })
+        //   }
+        // })
+        Repeat<HDMGoodsItem>(this.list).each((obj) => {
+          HDMGoods({ goods: obj.item, smallImage: true })
         })
+          .virtualScroll()
+          .key( (item: HDMGoodsItem, index: number) => `${index}_${JSON.stringify(item)}`)
       }
       .columnsTemplate(
         new BreakPointType({
