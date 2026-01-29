@@ -461,6 +461,10 @@ export struct HomeView {
 
   @Builder
   RefreshBuilder(){
-    HDMLoading()
+    if (this.isRefreshing){
+      HDMLoading()
+    }else {
+      Row()
+    }
   }
 }
