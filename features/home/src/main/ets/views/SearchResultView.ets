@@ -37,13 +37,15 @@ export struct SearchResultView {
 
   // 获取搜索数据的方法
   async getSearchResult(){
-    const res = await getSearchResultApi({
-      keyword: this.params.keyword,
-      sortField: this.params.sortField,
-      sortMethod: this.params.sortMethod,
-      page: this.params.page,
-      pageSize:this.params.pageSize
-    })
+    // const res = await getSearchResultApi({
+    //   keyword: this.params.keyword,
+    //   sortField: this.params.sortField,
+    //   sortMethod: this.params.sortMethod,
+    //   page: this.params.page,
+    //   pageSize:this.params.pageSize
+    // })
+    // const res = await getSearchResultApi(JSON.parse(JSON.stringify(this.params).replace(/__ob_/,'')) as SearchParams)
+    const res = await getSearchResultApi(this.params)
     this.list = res.pageData.items;
   }
 

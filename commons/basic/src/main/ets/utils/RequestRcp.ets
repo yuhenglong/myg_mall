@@ -9,10 +9,15 @@ class RcpRequestInterceptor implements rcp.Interceptor {
   async intercept(context: rcp.RequestContext, next: rcp.RequestHandler): Promise<rcp.Response> {
     // to from next(必须要执行的函数)
     // next传递到下一个
-    // throw new Error("Method not implemented.");
+    // throw new Error("Method not implemented.");  
     // axios返回类型无法更改！！！
     // 请求拦截器
     // TODO 注入token
+
+    if (typeof context.request.content === 'object') {
+      context.request.content = JSON.parse(JSON.stringify(context.request.content).replace(/__ob_/,'')) as rcp.RequestContent
+    }
+    
     return next.handle(context) // 将结构返回下一个执行链
   }
 }
