@@ -27,6 +27,10 @@ export struct SearchResultView {
 
   @Local
   list: HDMGoodsItem[] = []
+  @Local
+  loading: boolean = false // 正在加载
+  @Local
+  finished: boolean = false // 是否完成
 
   aboutToAppear(): void {
     // 接收上一个页面传过来的参数
@@ -46,7 +50,12 @@ export struct SearchResultView {
     // })
     // const res = await getSearchResultApi(JSON.parse(JSON.stringify(this.params).replace(/__ob_/,'')) as SearchParams)
     const res = await getSearchResultApi(this.params)
-    this.list = res.pageData.items;
+    this.list.push(...res.pageData.items);
+    if (this.params.page >= res.pageData.pages) {
+      this.finished = true
+    }else {
+      this.params.page ++;
+    }
   }
 
   build() {
@@ -73,7 +82,10 @@ export struct SearchResultView {
           .height(36)
           .caretStyle({ color: $r('[basic].color.red') })
           .onSubmit(() => {
-
+            this.params.page = 1;
+            this.list = [];
+            this.finished = false;
+            this.getSearchResult();
           })
       }
       .padding({ top: this.safeArea.topHeight, right: 16 })
@@ -105,7 +117,7 @@ export struct SearchResultView {
       .justifyContent(FlexAlign.SpaceBetween)
       .border({ width: { bottom: 0.5 }, color: $r('[basic].color.border') })
 
-      WaterFlow({ scroller: this.scroller }) {
+      WaterFlow({ scroller: this.scroller, footer: this.getFootBuilder() }) {
         // LazyForEach(this.lazyDataSource, (item: HDMGoodsItem) => {
         //   FlowItem() {
         //     HDMGoods({ goods: item, smallImage: true })
@@ -130,8 +142,34 @@ export struct SearchResultView {
       .rowsGap(0.5)
       .layoutWeight(1)
       .onReachEnd(async () => {
-
+        if (!this.loading && !this.finished) {
+          this.loading = true
+          await this.getSearchResult()
+        }
       })
     }
+  }
+
+  @Builder
+  getFootBuilder() {
+    Row({ space: 10 }) {
+      if (this.loading) {
+        Text("加载中...")
+          .fontSize(12)
+          .fontColor($r("[basic].color.gray"))
+        LoadingProgress()
+          .width(20)
+          .aspectRatio(1)
+      } else {
+        if (this.finished) {
+          Text("没有更多啦")
+            .fontSize(12)
+            .fontColor($r("[basic].color.gray"))
+        }
+      }
+    }
+    .justifyContent(FlexAlign.Center)
+    .width("100%")
+    .height(50)
   }
 }
