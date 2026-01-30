@@ -39,6 +39,13 @@ export struct SearchResultView {
     this.getSearchResult()
   }
 
+  onRefresh() {
+    this.params.page = 1
+    this.list = [] // 重新赋值为空
+    this.finished = false
+    this.getSearchResult()
+  }
+
   // 获取搜索数据的方法
   async getSearchResult(){
     // const res = await getSearchResultApi({
@@ -103,8 +110,11 @@ export struct SearchResultView {
             field: item.field,
             sortField: this.params.sortField,
             sortMethod: this.params.sortMethod,
-            // onSortChange: (field: SortField, method: SortMethod) => {
-            // }
+            onSortChange: (field: SortField, method: SortMethod) => {
+              this.params.sortField = field // 相当于重新加载数据 排序字段
+              this.params.sortMethod = method // 排序方式
+              this.onRefresh()
+            }
           })
         })
         Text('筛选')

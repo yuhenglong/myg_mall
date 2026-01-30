@@ -14,9 +14,8 @@ export struct SearchSortItem {
   // 父组件的排序方法
   @Param sortMethod: SortMethod = 'desc'
   // 定义子传父的函数
-  // @Event
-  // onSortChange: (field: SortField, method: SortMethod) => void = () => {
-  // }
+  @Event
+  onSortChange: (field:SortField,method:SortMethod) => void = () => {}
 
   build() {
     Row() {
@@ -39,8 +38,13 @@ export struct SearchSortItem {
       .justifyContent(FlexAlign.Center)
     }
     .onClick(() => {
-
-
+      // 排序字段相同,修改排序方式
+      if (this.field === this.sortField) {
+        this.onSortChange(this.field, this.sortMethod === "asc" ? "desc" : 'asc')
+      } else {
+        // 排序字段不同，排序方式 desc，修改排序字段
+        this.onSortChange(this.field, "desc") // 如果选择不是一个字段 默认按照倒序
+      }
     })
   }
 }
