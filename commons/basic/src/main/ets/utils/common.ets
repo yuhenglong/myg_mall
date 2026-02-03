@@ -59,3 +59,36 @@ export class AppCategory {
   @Trace
   category: CategoryItem[] = []
 }
+
+// 存储全局用户信息
+export interface UserInfo {
+  token: string
+  avatar: string
+  nickname: string
+  account: string
+}
+
+@ObservedV2
+export class HDMUser implements UserInfo {
+  @Trace
+  token: string = '';
+  @Trace
+  avatar: string = '';
+  @Trace
+  nickname: string = '';
+  @Trace
+  account: string = '';
+
+  constructor(model:UserInfo) {
+    this.token = model.token;
+    this.avatar = model.avatar;
+    this.nickname = model.nickname;
+    this.account = model.account
+  }
+}
+
+@ObservedV2
+export class AppUser {
+  @Trace
+  user: UserInfo = new HDMUser({} as UserInfo)
+}
