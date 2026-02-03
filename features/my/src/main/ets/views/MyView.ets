@@ -1,5 +1,6 @@
 import { AppSafeArea, HDMGuessGoods, HDMNavCol, PAGE_PATH } from "basic"
 import { AppStorageV2 } from "@kit.ArkUI"
+import { HMRouterMgr } from "@hadss/hmrouter"
 
 
 @ComponentV2
@@ -34,7 +35,7 @@ export struct MyView {
                 .width(40)
                 .aspectRatio(1)
                 .borderRadius(20)
-              if (true) {
+              if (false) {
                 Text("张三")
                   .fontColor($r('[basic].color.black'))
                   .fontWeight(500)
@@ -43,7 +44,9 @@ export struct MyView {
                   .fontColor($r('[basic].color.black'))
                   .fontWeight(500)
                   .onClick(() => {
-
+                    HMRouterMgr.push({
+                      pageUrl:PAGE_PATH.LOGIN_PAGE
+                    })
                   })
               }
             }
