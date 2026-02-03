@@ -1,4 +1,4 @@
-import { AppSafeArea, HDMNavCol, PAGE_PATH } from "basic"
+import { AppSafeArea, HDMGuessGoods, HDMNavCol, PAGE_PATH } from "basic"
 import { AppStorageV2 } from "@kit.ArkUI"
 
 
@@ -158,6 +158,7 @@ export struct MyView {
           .padding({ left: 8, right: 8 })
 
           // guess
+          HDMGuessGoods()
 
         }
       }

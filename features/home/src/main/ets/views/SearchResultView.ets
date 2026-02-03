@@ -1,9 +1,9 @@
-import { AppBreakPoint, AppSafeArea, BreakPointType, HDMGoodsItem, ListDataSource, Logger, PAGE_PATH } from 'basic'
+import { AppBreakPoint, AppSafeArea, BreakPointType,
+  HDMGoods, HDMGoodsItem, ListDataSource, Logger, PAGE_PATH } from 'basic'
 import { GoodsItems, SearchParams, SearchRouterParam, SortCompAttr, SortField, SortMethod } from '../viewmodels'
 import { SearchSortItem } from '../components'
 import { HMRouter, HMRouterMgr } from '@hadss/hmrouter'
 import { AppStorageV2 } from '@kit.ArkUI'
-import { HDMGoods } from '../components'
 import { getSearchResultApi } from '../api/search'
 
 

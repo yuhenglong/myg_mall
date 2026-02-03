@@ -3,9 +3,9 @@ import { AppBreakPoint,
   AppSafeArea, BreakPointEnum, BreakPointType, CategoryItem, HDMGoodsItem,
   HDMLoading,
   ListDataSource,
-  Logger,
+  HDMGoods,
   PAGE_PATH} from 'basic'
-import { HDMDiscountGoods, HDMGoods } from '../components'
+import { HDMDiscountGoods } from '../components'
 import { Banner, Params, DiscountType } from '../viewmodels'
 import { AppStorageV2, promptAction, PromptAction } from '@kit.ArkUI'
 import { getBannerAPI, getCategoryAPI, getHomeNewAPI, getHotResultAPI, getInVogueAPI, getOneStopAPI,
