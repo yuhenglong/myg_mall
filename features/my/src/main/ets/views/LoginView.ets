@@ -2,14 +2,30 @@ import { AppSafeArea, HDMNavBar, PAGE_PATH } from 'basic'
 import { AppStorageV2, promptAction } from '@kit.ArkUI'
 
 import { HMRouter, HMRouterMgr } from '@hadss/hmrouter'
+import { LoginFormModel } from '../viewmodels'
 
 @HMRouter({ pageUrl: PAGE_PATH.LOGIN_PAGE })
 @ComponentV2
 export struct LoginView {
-  @Local account: string = '13200000010'
-  @Local password: string = '123456'
+  // @Local account: string = '13200000010'
+  // @Local password: string = '123456'
+  loginForm: LoginFormModel = new LoginFormModel({
+    account : '13200000010',
+    password : '123456'
+  })
+
   @Local agree: boolean = false
   safeArea: AppSafeArea = AppStorageV2.connect(AppSafeArea, () => new AppSafeArea())!
+
+  @Monitor('loginForm.account')
+  updateAccount(monitor:IMonitor){
+    // promptAction.showToast({message:monitor.value()?.now as string})
+  }
+
+  @Computed
+  get btnEnable(){
+    return !!(this.loginForm.account && this.loginForm.password)
+  }
 
   aboutToAppear(): void {
 
@@ -48,11 +64,11 @@ export struct LoginView {
           .width('100%')
           .fontWeight(500)
           .margin({ bottom: 10 })
-        TextInput({ placeholder: '请输入账号', text: $$this.account })
+        TextInput({ placeholder: '请输入账号', text: $$this.loginForm.account })
           .placeholderColor($r('[basic].color.gray'))
           .placeholderFont({ size: 14 })
           .form()
-        TextInput({ placeholder: '请输入密码', text: $$this.password })
+        TextInput({ placeholder: '请输入密码', text: $$this.loginForm.password })
           .type(InputType.Password)
           .showPasswordIcon(false)
           .placeholderColor($r('[basic].color.gray'))
@@ -82,6 +98,7 @@ export struct LoginView {
         Button('登录')// .backgroundColor(this.valid ? $r('[basic].color.black') : '#D4D2D9')
           .fontColor($r('[basic].color.white'))
           .form()
+          .enabled(this.btnEnable)
           .onClick(() => {
             this.onSubmit()
           })
