@@ -1,5 +1,6 @@
 import { CategoryItem } from "../viewmodels/business";
 import { BreakPointEnum } from "./break_point";
+import { Type } from "@ohos.arkui.StateManagement";
 
 @ObservedV2
 export class AppBreakPoint {
@@ -78,17 +79,19 @@ export class HDMUser implements UserInfo {
   nickname: string = '';
   @Trace
   account: string = '';
-
-  constructor(model:UserInfo) {
-    this.token = model.token;
-    this.avatar = model.avatar;
-    this.nickname = model.nickname;
-    this.account = model.account
-  }
+  //
+  // constructor(model:UserInfo) {
+  //   this.token = model.token;
+  //   this.avatar = model.avatar;
+  //   this.nickname = model.nickname;
+  //   this.account = model.account
+  // }
 }
 
 @ObservedV2
 export class AppUser {
+  // 当储存类型为复杂数据类型时,要用@Type装饰器
+  @Type(HDMUser)
   @Trace
-  user: UserInfo = new HDMUser({} as UserInfo)
+  user: UserInfo = new HDMUser()
 }

@@ -1,12 +1,12 @@
 import { AppSafeArea, AppUser, HDMGuessGoods, HDMNavCol, PAGE_PATH } from "basic"
-import { AppStorageV2 } from "@kit.ArkUI"
+import { AppStorageV2, PersistenceV2 } from "@kit.ArkUI"
 import { HMRouterMgr } from "@hadss/hmrouter"
 
 
 @ComponentV2
 export struct MyView {
   safeArea: AppSafeArea = AppStorageV2.connect(AppSafeArea, () => new AppSafeArea())!
-  appUser:AppUser = AppStorageV2.connect(AppUser, () => new AppUser())!
+  appUser:AppUser = PersistenceV2.connect(AppUser, () => new AppUser())!
 
   build() {
     Column() {
