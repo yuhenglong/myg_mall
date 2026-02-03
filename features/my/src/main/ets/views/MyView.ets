@@ -16,12 +16,14 @@ export struct MyView {
           Column() {
             Row() {
               Blank()
-              if (this.appUser.user.token) {
+              if (true) {
                 Image($r('[basic].media.ic_public_settings'))
                   .width(24)
                   .aspectRatio(1)
                   .onClick(() => {
-
+                    HMRouterMgr.push({
+                      pageUrl: PAGE_PATH.SETTING_PAGE
+                    })
                   })
               }
 
