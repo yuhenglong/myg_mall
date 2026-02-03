@@ -3,6 +3,7 @@ import { hilog } from '@kit.PerformanceAnalysisKit';
 import { window } from '@kit.ArkUI';
 import { screenManager, ScreenManager } from 'basic';
 import { HMRouterMgr } from '@hadss/hmrouter';
+import { DialogHelper } from '@pura/harmony-dialog';
 
 const DOMAIN = 0x0000;
 
@@ -12,6 +13,12 @@ export default class EntryAbility extends UIAbility {
     HMRouterMgr.init({
       context: this.context,
     });
+
+    // 初始化HmDialog
+    DialogHelper.setDefaultConfig((config) => {
+      config.uiAbilityContext = this.context;
+    })
+
     try {
       this.context.getApplicationContext().setColorMode(ConfigurationConstant.ColorMode.COLOR_MODE_NOT_SET);
     } catch (err) {

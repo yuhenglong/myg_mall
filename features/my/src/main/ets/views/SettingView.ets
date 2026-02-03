@@ -1,6 +1,7 @@
-import { HMRouter } from '@hadss/hmrouter'
-import { HDMUser, HDMNavBar, HDMCellGroup, HDMCell, PAGE_PATH, AppSafeArea, AppUser } from 'basic'
+import { HMRouter, HMRouterMgr } from '@hadss/hmrouter'
+import { HDMUser, HDMNavBar, HDMCellGroup, HDMCell, PAGE_PATH, AppSafeArea, AppUser, auth } from 'basic'
 import { AppStorageV2, PersistenceV2 } from '@kit.ArkUI'
+import { DialogAction, DialogHelper } from '@pura/harmony-dialog'
 
 
 @HMRouter({ pageUrl: PAGE_PATH.SETTING_PAGE })
@@ -112,7 +113,34 @@ export struct SettingView {
           HDMCell({ title: '退出登录' })
             .onClick(() => {
               // 弹出层
+              // AlertDialog.show({
+              //   message:'你确定退出吗?',
+              //   primaryButton:{
+              //     value:'取消',
+              //     fontColor: $r('[basic].color.red'),
+              //     action: () => {}
+              //   },
+              //   secondaryButton:{
+              //     value:'确定',
+              //     fontColor: $r('[basic].color.gray'),
+              //     action: () => {
+              //       auth.setUser({} as HDMUser)
+              //       HMRouterMgr.pop()
+              //     }
+              //   }
+              // })
 
+              DialogHelper.showAlertDialog({
+                content: "确认退出登录吗？",
+                onAction: (action) => {
+                  if (action == DialogAction.CANCEL) {
+
+                  } else if (action == DialogAction.SURE) {
+                    auth.setUser({} as HDMUser)
+                    HMRouterMgr.pop()
+                  }
+                }
+              })
             })
 
         }
