@@ -1,8 +1,9 @@
-import { AppSafeArea, HDMNavBar, PAGE_PATH } from 'basic'
+import { AppSafeArea, auth, HDMNavBar, PAGE_PATH } from 'basic'
 import { AppStorageV2, promptAction } from '@kit.ArkUI'
 
 import { HMRouter, HMRouterMgr } from '@hadss/hmrouter'
 import { LoginFormModel } from '../viewmodels'
+import { loginAPI } from '../apis'
 
 @HMRouter({ pageUrl: PAGE_PATH.LOGIN_PAGE })
 @ComponentV2
@@ -10,7 +11,7 @@ export struct LoginView {
   // @Local account: string = '13200000010'
   // @Local password: string = '123456'
   loginForm: LoginFormModel = new LoginFormModel({
-    account : '13200000010',
+    account : '13200000005',
     password : '123456'
   })
 
@@ -35,6 +36,9 @@ export struct LoginView {
     if (!this.agree) {
       return promptAction.showToast({ message: '请先勾选协议' })
     }
+    const user = await loginAPI(this.loginForm)
+    auth.setUser(user) // 储存用户信息
+    HMRouterMgr.pop()
   }
 
   @Styles

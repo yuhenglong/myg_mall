@@ -1,4 +1,4 @@
-import { AppSafeArea, HDMGuessGoods, HDMNavCol, PAGE_PATH } from "basic"
+import { AppSafeArea, AppUser, HDMGuessGoods, HDMNavCol, PAGE_PATH } from "basic"
 import { AppStorageV2 } from "@kit.ArkUI"
 import { HMRouterMgr } from "@hadss/hmrouter"
 
@@ -6,6 +6,7 @@ import { HMRouterMgr } from "@hadss/hmrouter"
 @ComponentV2
 export struct MyView {
   safeArea: AppSafeArea = AppStorageV2.connect(AppSafeArea, () => new AppSafeArea())!
+  appUser:AppUser = AppStorageV2.connect(AppUser, () => new AppUser())!
 
   build() {
     Column() {
@@ -15,7 +16,7 @@ export struct MyView {
           Column() {
             Row() {
               Blank()
-              if (true) {
+              if (this.appUser.user.token) {
                 Image($r('[basic].media.ic_public_settings'))
                   .width(24)
                   .aspectRatio(1)
@@ -31,12 +32,12 @@ export struct MyView {
 
             Row({ space: 16 }) {
               // 头像
-              Image($r('app.media.ic_user_avatar'))
+              Image(this.appUser.user.avatar || $r('app.media.ic_user_avatar'))
                 .width(40)
                 .aspectRatio(1)
                 .borderRadius(20)
-              if (false) {
-                Text("张三")
+              if (this.appUser.user.token) {
+                Text(this.appUser.user.nickname)
                   .fontColor($r('[basic].color.black'))
                   .fontWeight(500)
               } else {
