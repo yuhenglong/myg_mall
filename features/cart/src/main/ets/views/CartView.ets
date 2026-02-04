@@ -1,6 +1,7 @@
 import { HDMGuessGoods, HDMNavBar, HDMUser, CartGoodsModel, AppBreakPoint, AppSafeArea, AppUser, HDMEmpty,
   PAGE_PATH,
-  GlobalVariable} from 'basic'
+  GlobalVariable,
+  getCartListAPI} from 'basic'
 import { CartItem } from '../components'
 import { HMRouterMgr } from '@hadss/hmrouter'
 import { AppStorageV2, PersistenceV2 } from '@kit.ArkUI'
@@ -16,7 +17,12 @@ export struct CartView {
   @Local cartList: CartGoodsModel[] = []
 
   aboutToAppear(): void {
+    this.getCartList()
+  }
 
+  async getCartList(){
+    const res = await getCartListAPI()
+    this.cartList = res
   }
 
   @Builder
