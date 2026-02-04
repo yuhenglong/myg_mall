@@ -30,6 +30,7 @@ export struct GoodsView {
   sku: HDMSkuType = {} as HDMSkuType
   scroller = new Scroller()
   tabsList: string[] = ["商品", "评价", "详情", "推荐"]
+  @Local count:number = 1;
 
   @Builder
   CustomTitleBuilder() {
@@ -108,11 +109,20 @@ export struct GoodsView {
 
           Row({ space: 10 }) {
             // 计数器
+            Counter(){
+              Text(this.count.toString())
+            }
+            .onInc(() =>{
+              this.count++
+            })
+            .onDec(() => {
+              this.count--
+            })
+            .enableDec(this.count > 1)
 
-
-            Text('库存充足')
+            Text(this.goods.inventory > 10000 ? '库存充足':'库存紧张')
               .fontSize(12)
-              .fontColor($r('[basic].color.gray'))
+              .fontColor(this.goods.inventory > 10000 ? $r('[basic].color.gray') : $r('[basic].color.red') )
           }
         }
         .height(80)
@@ -248,11 +258,12 @@ export struct GoodsView {
           Button('加入购物袋')
             .buyButton($r('[basic].color.black'), true)
             .onClick(() => {
+              this.showSheet = true
             })
           Button('立即购买')
             .buyButton($r('[basic].color.red'), false)
             .onClick(async () => {
-
+              this.showSheet = true
             })
         }
         .layoutWeight(1)
