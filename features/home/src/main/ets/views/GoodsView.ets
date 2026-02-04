@@ -36,13 +36,21 @@ export struct GoodsView {
     // 楼层切换
     Row() {
       Row({ space: 10 }) {
-        ForEach(this.tabsList, (tabName: string, index: number) => {
-          Text(tabName)
-            .fontColor(this.activeIndex === index ? $r("[basic].color.black") : $r("[basic].color.gray"))
-            .onClick(() => {
-
-            })
+        Repeat<string>(this.tabsList).each((obj:RepeatItem<string>) => {
+          Text(obj.item)
+              .fontColor(this.activeIndex === obj.index ? $r("[basic].color.black") : $r("[basic].color.gray"))
+              .onClick(() => {
+                this.activeIndex = obj.index;
+                this.scroller.scrollToIndex(this.activeIndex)
+              })
         })
+        // ForEach(this.tabsList, (tabName: string, index: number) => {
+        //   Text(tabName)
+        //     .fontColor(this.activeIndex === index ? $r("[basic].color.black") : $r("[basic].color.gray"))
+        //     .onClick(() => {
+        //
+        //     })
+        // })
       }
 
       Image($r('[basic].media.ic_public_shared'))
@@ -177,9 +185,10 @@ export struct GoodsView {
   build() {
     Column() {
       HDMNavBar({
+        title:'',
         showRightIcon: true,
         customTitle: () => {
-
+          this.CustomTitleBuilder()
         },
         onLeftClick: () => {
           HMRouterMgr.pop()
