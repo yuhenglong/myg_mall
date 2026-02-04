@@ -1,10 +1,11 @@
-import { AppBreakPoint, AppSafeArea, BreakPointType, Logger, PAGE_PATH, TabItem } from 'basic'
+import { AppBreakPoint, AppSafeArea, BreakPointType, GlobalVariable, Logger, PAGE_PATH, TabItem } from 'basic'
 import { CartView } from 'cart'
 import { CategoryView } from 'category'
 import { HomeView } from 'home'
 import { MyView } from 'my'
 import { AppStorageV2, AttributeUpdater } from '@kit.ArkUI'
 import { HMDefaultGlobalAnimator, HMNavigation } from '@hadss/hmrouter'
+import { emitter } from '@kit.BasicServicesKit'
 
 class MyModifier extends AttributeUpdater<NavigationAttribute> {
   // 重写原来的方法
@@ -22,6 +23,7 @@ struct Index {
   modifier: MyModifier = new MyModifier() // 专门用来修改Navigation特性对象实例
   breakObj: AppBreakPoint = AppStorageV2.connect(AppBreakPoint,() => new AppBreakPoint())!
   safeArea: AppSafeArea = AppStorageV2.connect(AppSafeArea, () => new AppSafeArea())!
+  controller: TabsController = new TabsController()
 
   @Local
   activeIndex: number = 0
@@ -33,9 +35,18 @@ struct Index {
   ]
 
   aboutToAppear(): void {
-    Logger.info({
-      name:'鸿蒙',
-      age:9
+    // 注册监听事件(切换tab)
+    this.registerEvent()
+  }
+
+  registerEvent(){
+    emitter.on(GlobalVariable.SWITCH_TAB,(e)=>{
+      if (e.data) {
+        // 直接切换
+        // this.activeIndex = e.data.index as number;
+        // 过渡切换
+        this.controller.changeIndex(e.data.index as number)
+      }
     })
   }
 
@@ -68,7 +79,9 @@ struct Index {
           modifier: this.modifier, // 修改Navigation的对象实例
           // 想要改一些Navigation的属性
         }}) {
-        Tabs({ barPosition: new BreakPointType({
+        Tabs({
+          controller:this.controller,
+          barPosition: new BreakPointType({
           sm: BarPosition.End,
           md: BarPosition.End,
           lg: BarPosition.Start

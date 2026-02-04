@@ -1,12 +1,15 @@
-import { HDMGuessGoods, HDMNavBar, HDMUser, CartGoodsModel, AppBreakPoint, AppSafeArea } from 'basic'
+import { HDMGuessGoods, HDMNavBar, HDMUser, CartGoodsModel, AppBreakPoint, AppSafeArea, AppUser, HDMEmpty,
+  PAGE_PATH,
+  GlobalVariable} from 'basic'
 import { CartItem } from '../components'
 import { HMRouterMgr } from '@hadss/hmrouter'
 import { AppStorageV2, PersistenceV2 } from '@kit.ArkUI'
+import { emitter } from '@kit.BasicServicesKit'
 
 @ComponentV2
 export struct CartView {
   // 用户信息
-  user: HDMUser = PersistenceV2.connect(HDMUser, () => new HDMUser())!
+  appUser: AppUser = PersistenceV2.connect(AppUser, () => new AppUser())!
   // 商品信息
   breakPointClass: AppBreakPoint = AppStorageV2.connect(AppBreakPoint, () => new AppBreakPoint())!
   safeArea: AppSafeArea = AppStorageV2.connect(AppSafeArea, () => new AppSafeArea())!
@@ -53,7 +56,7 @@ export struct CartView {
         })
 
       List() {
-        if (this.user.token) {
+        if (!this.appUser.user.token) {
 
           if (this.cartList.length) {
             ForEach(this.cartList, (cart: CartGoodsModel) => {
@@ -73,14 +76,27 @@ export struct CartView {
               })
             })
           } else {
+            // 购物车是空的
             ListItem() {
-
+              HDMEmpty({
+                onBtnClick:() =>{
+                  emitter.emit(GlobalVariable.SWITCH_TAB,{data:{index: 0}})
+                }
+              })
             }
           }
         } else {
           // 未登录
           ListItem() {
-
+            HDMEmpty({
+              tip:'您还未登录',
+              buttonText:'去登录',
+              onBtnClick: () => {
+                HMRouterMgr.push({
+                  pageUrl: PAGE_PATH.LOGIN_PAGE
+                })
+              }
+            })
 
           }
         }
