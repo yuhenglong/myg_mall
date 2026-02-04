@@ -70,7 +70,7 @@ export struct GoodsView {
   @Builder
   AddCartBuilder() {
     Column() {
-      Text(`已选:`)
+      Text(`已选:${this.sku.specsText}`)
         .fontWeight(300)
         .width('100%')
         .fontColor($r('[basic].color.black'))
@@ -78,8 +78,9 @@ export struct GoodsView {
         .padding({ bottom: 10, right: 50 })
         .maxLines(1)
         .textOverflow({ overflow: TextOverflow.Ellipsis })
+        .visibility(this.sku.id ? Visibility.Visible: Visibility.Hidden)
       Row({ space: 10 }) {
-        Image(this.goods.mainPictures?.[0])
+        Image(this.sku.picture || this.goods.mainPictures?.[0])
           .alt($r('app.media.ic_sku_img'))
           .width(80)
           .height(80)
@@ -91,11 +92,11 @@ export struct GoodsView {
               .fontSize(14)
               .fontColor($r('[basic].color.black'))
               .offset({ y: -4 })
-            Text(this.goods.price)
+            Text(this.sku.price || this.goods.price)
               .fontSize(24)
               .fontColor($r('[basic].color.black'))
               .fontWeight(500)
-            Text('原价¥' + this.goods.price)
+            Text('原价¥' + (this.sku.oldPrice || this.goods.price))
               .fontSize(12)
               .fontColor($r('[basic].color.gray'))
               .margin({ left: 10 })
@@ -139,7 +140,13 @@ export struct GoodsView {
       List() {
         ListItem() {
           // Sku 组件
-
+          HDMSku({
+            skus:this.goods.skus,
+            specs:this.goods.specs,
+            onSkuChange:(sku) => {
+              this.sku = sku
+            }
+          })
         }
       }
       .layoutWeight(1)
