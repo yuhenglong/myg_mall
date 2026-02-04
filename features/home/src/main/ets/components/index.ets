@@ -1,2 +1,5 @@
 export * from './HDMDiscountGoods'
 export * from './SearchSortItem'
+export * from './HDMGoodsComment'
+export * from './HDMGoodsDetail'
+export * from './HDMGoodsInfo'
