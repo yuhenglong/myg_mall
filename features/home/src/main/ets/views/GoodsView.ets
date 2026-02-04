@@ -1,4 +1,5 @@
 import {
+  addCartAPI,
   AppBreakPoint,
   AppSafeArea,
   auth,
@@ -9,11 +10,11 @@ import {
   PAGE_PATH
 } from 'basic'
 import { Goods } from '../viewmodels'
-import { AppStorageV2 } from '@kit.ArkUI'
+import { AppStorageV2, promptAction } from '@kit.ArkUI'
 import { HDMGoodsInfo, HDMGoodsComment, HDMGoodsDetail } from '../components'
 import { HMRouter, HMRouterMgr } from '@hadss/hmrouter'
 import { getGoodsDetailAPI } from '../api'
-import { DialogHelper, SpinType } from '@pura/harmony-dialog'
+import { AlertOptions, DialogHelper, SpinType } from '@pura/harmony-dialog'
 
 
 @HMRouter({ pageUrl: PAGE_PATH.GOODS_PAGE })
@@ -31,6 +32,44 @@ export struct GoodsView {
   scroller = new Scroller()
   tabsList: string[] = ["商品", "评价", "详情", "推荐"]
   @Local count:number = 1;
+
+  async addCart(){
+    // 判断是否登录
+    const user = auth.getUser()
+    if (!user.token) {
+      // 判断是否有skuId
+      if (this.sku.id) {
+        const key = DialogHelper.showLoadingDialog({
+          loadType: SpinType.spinP,
+          loadColor: Color.White,
+          loadSize: 50,
+          backgroundColor: '#b5000000',
+          content: "正在加入…",
+          fontSize: 18,
+          padding: { top: 30, right: 50, bottom: 30, left: 50 },
+          autoCancel: true
+        })
+
+        await addCartAPI({
+          skuId:this.sku.id,
+          count: this.count
+        })
+
+        promptAction.showToast({message:'成功加入购物车~' })
+        DialogHelper.closeDialog(key)
+        this.showSheet = false
+      }else {
+        promptAction.showToast({message:'请选择对应规格的商品'})
+      }
+    }else{
+      promptAction.showToast({message:'您还未登录'})
+      // 关闭半模态
+      this.showSheet = false
+      HMRouterMgr.push({
+        pageUrl: PAGE_PATH.LOGIN_PAGE
+      })
+    }
+  }
 
   @Builder
   CustomTitleBuilder() {
@@ -157,7 +196,7 @@ export struct GoodsView {
           .buyButton($r('[basic].color.black'), true)
           .onClick(() => {
             // 实现加入购物车
-
+            this.addCart()
           })
         Button('立即购买')
           .buyButton($r('[basic].color.red'), false)
