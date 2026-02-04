@@ -1,5 +1,5 @@
 import { CategoryItem, HDMGoodsItem, RequestRcp } from "basic"
-import { Banner, HotResult, RecommendParams } from "../viewmodels"
+import { Banner, Goods, GoodsParams, HotResult, RecommendParams } from "../viewmodels"
 
 export const getBannerAPI = () => {
   return RequestRcp.get<Banner[]>("/home/banner")
@@ -32,4 +32,9 @@ export const getHomeNewAPI = () => {
 // 获取推荐数据
 export const getRecommendAPI = (params: RecommendParams) => {
   return RequestRcp.get<HDMGoodsItem[]>("/home/recommend", params)
+}
+
+// 获取商品详情
+export const getGoodsDetailAPI = (params: GoodsParams) => {
+  return RequestRcp.get<Goods>("/goods", params)
 }

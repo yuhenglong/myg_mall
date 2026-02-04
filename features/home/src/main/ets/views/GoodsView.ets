@@ -12,6 +12,8 @@ import { Goods } from '../viewmodels'
 import { AppStorageV2 } from '@kit.ArkUI'
 import { HDMGoodsInfo, HDMGoodsComment, HDMGoodsDetail } from '../components'
 import { HMRouter, HMRouterMgr } from '@hadss/hmrouter'
+import { getGoodsDetailAPI } from '../api'
+import { DialogHelper, SpinType } from '@pura/harmony-dialog'
 
 
 @HMRouter({ pageUrl: PAGE_PATH.GOODS_PAGE })
@@ -151,7 +153,25 @@ export struct GoodsView {
 
   aboutToAppear(): void {
     this.goods = HMRouterMgr.getCurrentParam() as Goods
+    this.getGoodsDetail()
+  }
 
+  async getGoodsDetail() {
+    //进度加载类弹出框
+    const key = DialogHelper.showLoadingDialog({
+      loadType: SpinType.spinP,
+      loadColor: Color.White,
+      loadSize: 70,
+      backgroundColor: '#BB000000',
+      content: "加载中…",
+      fontSize: 18,
+      padding: { top: 30, right: 50, bottom: 30, left: 50 },
+      autoCancel: true
+    })
+
+    this.goods = await getGoodsDetailAPI({ id: this.goods.id })
+
+    DialogHelper.closeDialog(key)
   }
 
   build() {
