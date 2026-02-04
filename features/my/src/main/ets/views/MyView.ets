@@ -103,6 +103,11 @@ export struct MyView {
 
               GridCol() {
                 HDMNavCol({ icon: $r('app.media.ic_user_service'), text: '我的客服', color: $r('[basic].color.text') })
+                  .onClick(() => {
+                    HMRouterMgr.push({
+                      pageUrl:PAGE_PATH.AI_CUSTOMER_PAGE
+                    })
+                  })
               }
             }
             .width('100%')
