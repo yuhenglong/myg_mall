@@ -95,3 +95,13 @@ export class AppUser {
   @Trace
   user: UserInfo = new HDMUser()
 }
+
+export interface CartCount {
+  count: number
+}
+
+@ObservedV2
+export class AppCart {
+  @Trace
+  count:number = 0
+}

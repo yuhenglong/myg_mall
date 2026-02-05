@@ -11,7 +11,7 @@ export struct LoginView {
   // @Local account: string = '13200000010'
   // @Local password: string = '123456'
   loginForm: LoginFormModel = new LoginFormModel({
-    account : '13200000005',
+    account : 'zhousg',
     password : '123456'
   })
 
