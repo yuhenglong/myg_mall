@@ -29,10 +29,23 @@ export struct CartView {
   aboutToAppear(): void {
     this.showLeftIcon = HMRouterMgr.getCurrentParam() as boolean;
   }
-
+// 全选按钮是否勾选
   @Computed
   get isCheckAll(){
     return this.appCart.cartList.every(item => item.selected)
+  }
+// 计算总价格
+  @Computed
+  get totalPrice(){
+    return (this.appCart.cartList.filter(item => item.selected)).reduce((count : number , item : CartGoodsModel) => {
+      return count + item.count * item.price;
+    }, 0 )
+  }
+
+  //去结算是否可点击
+  @Computed
+  get isClick(){
+    return this.appCart.cartList.some(item => item.selected)
   }
 
   @Builder
@@ -172,13 +185,13 @@ export struct CartView {
             .fontSize(14)
             .fontColor($r('[basic].color.black'))
             .margin({ right: 2 })
-          Text("0.00")
+          Text(this.totalPrice.toFixed(2))
             .fontSize(16)
             .fontWeight(500)
             .fontColor($r('[basic].color.red'))
             .layoutWeight(1)
           Button('去结算')
-            .enabled(this.appCart.cartList.some(item => item.selected))
+            .enabled(this.isClick)
             .fontSize(14)
             .height(36)
             .backgroundColor($r('[basic].color.red'))
