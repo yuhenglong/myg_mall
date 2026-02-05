@@ -1,4 +1,4 @@
-import { CartCount, RequestRcp } from "../utils";
+import { CartCount, DeleteCartParams, RequestRcp } from "../utils";
 import { AddCartParams, CartGoodsModel, UpdateCartParams } from "../viewmodels";
 
 
@@ -12,3 +12,5 @@ export const getCartCountAPI = () => RequestRcp.get<CartCount>('/member/cart/cou
 export const updateCartAPI = (skuId: string, data: UpdateCartParams) => RequestRcp.put<null>(`/member/cart/${skuId}`, data)
 // 全选和取消全选
 export const selectOrUnSelectAPI = (data: UpdateCartParams) => RequestRcp.put<null>("/member/cart/selected", data)
+
+export const delCartAPI = (data: DeleteCartParams) => RequestRcp.delete<null>("/member/cart", undefined, data)

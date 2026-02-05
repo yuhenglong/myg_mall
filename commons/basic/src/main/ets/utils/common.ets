@@ -107,3 +107,8 @@ export class AppCart {
   @Trace
   cartList: CartGoodsModel[] = [] // 全局购物车
 }
+
+// 编译 类型  运行
+export interface DeleteCartParams {
+  ids: string[]
+}

@@ -5,12 +5,13 @@ import { HDMGuessGoods, HDMNavBar, HDMUser, CartGoodsModel, AppBreakPoint, AppSa
   AppCart,
   updateCartAPI,
   authCart,
-  selectOrUnSelectAPI} from 'basic'
+  selectOrUnSelectAPI,
+  delCartAPI} from 'basic'
 import { CartItem } from '../components'
 import { HMRouter, HMRouterMgr } from '@hadss/hmrouter'
 import { AppStorageV2, PersistenceV2 } from '@kit.ArkUI'
 import { emitter } from '@kit.BasicServicesKit'
-import { DialogHelper } from '@pura/harmony-dialog'
+import { DialogAction, DialogHelper } from '@pura/harmony-dialog'
 
 @HMRouter({pageUrl: PAGE_PATH.CART_PAGE})
 
@@ -58,7 +59,17 @@ export struct CartView {
       .fontColor($r('[basic].color.white'))
       .textAlign(TextAlign.Center)
       .onClick(() => {
+        DialogHelper.showAlertDialog({
+          content:'确定删除该商品吗?',
+          onAction: async (action) => {
+            if (action == DialogAction.CANCEL) {
 
+            } else if (action == DialogAction.SURE) {
+              await delCartAPI({ ids: [cart.skuId] })
+              await authCart.updateCartCount()
+            }
+          }
+        })
       })
   }
 
