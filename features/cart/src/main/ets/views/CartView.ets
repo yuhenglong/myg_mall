@@ -1,7 +1,8 @@
 import { HDMGuessGoods, HDMNavBar, HDMUser, CartGoodsModel, AppBreakPoint, AppSafeArea, AppUser, HDMEmpty,
   PAGE_PATH,
   GlobalVariable,
-  getCartListAPI} from 'basic'
+  getCartListAPI,
+  AppCart} from 'basic'
 import { CartItem } from '../components'
 import { HMRouter, HMRouterMgr } from '@hadss/hmrouter'
 import { AppStorageV2, PersistenceV2 } from '@kit.ArkUI'
@@ -16,19 +17,20 @@ export struct CartView {
   // 商品信息
   breakPointClass: AppBreakPoint = AppStorageV2.connect(AppBreakPoint, () => new AppBreakPoint())!
   safeArea: AppSafeArea = AppStorageV2.connect(AppSafeArea, () => new AppSafeArea())!
-  @Local cartList: CartGoodsModel[] = []
+  appCart: AppCart = AppStorageV2.connect(AppCart, () => new AppCart())!
+  // @Local cartList: CartGoodsModel[] = []
   @Local
   showLeftIcon : boolean = false
 
   aboutToAppear(): void {
     this.showLeftIcon = HMRouterMgr.getCurrentParam() as boolean;
-    this.getCartList()
+    // this.getCartList()
   }
 
-  async getCartList(){
-    const res = await getCartListAPI()
-    this.cartList = res
-  }
+  // async getCartList(){
+    // const res = await getCartListAPI()
+    // this.cartList = res
+  // }
 
   @Builder
   DeleteBuilder(cart: CartGoodsModel) {
@@ -69,11 +71,11 @@ export struct CartView {
       List() {
         if (this.appUser.user.token) {
 
-          if (this.cartList.length) {
-            ForEach(this.cartList, (cart: CartGoodsModel) => {
+          if (this.appCart.cartList.length) {
+            Repeat<CartGoodsModel>(this.appCart.cartList).each((obj:RepeatItem<CartGoodsModel>) => {
               ListItem() {
                 CartItem({
-                  cart: cart,
+                  cart: obj.item,
                   onChangeSelected: async selected => {
 
                   }
@@ -83,9 +85,11 @@ export struct CartView {
               .padding({ left: 8, right: 8 })
               .transition({ type: TransitionType.Delete, opacity: 0 })
               .swipeAction({
-                end: this.DeleteBuilder(cart)
+                end: this.DeleteBuilder(obj.item)
               })
             })
+              .virtualScroll()
+              .key((item: CartGoodsModel, index: number) => `${index}_${item}`)
           } else {
             // 购物车是空的
             ListItem() {
@@ -122,7 +126,7 @@ export struct CartView {
       .layoutWeight(1)
       .scrollBar(BarState.Off)
 
-      if (this.cartList.length) {
+      if (this.appCart.cartList.length) {
         Row() {
           Checkbox()
             .selectedColor($r('[basic].color.red'))
@@ -143,7 +147,7 @@ export struct CartView {
             .fontColor($r('[basic].color.red'))
             .layoutWeight(1)
           Button('去结算')
-            .enabled(this.cartList.some(item => item.selected))
+            .enabled(this.appCart.cartList.some(item => item.selected))
             .fontSize(14)
             .height(36)
             .backgroundColor($r('[basic].color.red'))
