@@ -301,7 +301,10 @@ export struct GoodsView {
           Image($r('[basic].media.ic_public_cart'))
             .iconButton()
             .onClick(() => {
-
+              HMRouterMgr.push({
+                pageUrl: PAGE_PATH.CART_PAGE,
+                param: true
+              })
             })
         }
 

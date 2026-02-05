@@ -3,9 +3,11 @@ import { HDMGuessGoods, HDMNavBar, HDMUser, CartGoodsModel, AppBreakPoint, AppSa
   GlobalVariable,
   getCartListAPI} from 'basic'
 import { CartItem } from '../components'
-import { HMRouterMgr } from '@hadss/hmrouter'
+import { HMRouter, HMRouterMgr } from '@hadss/hmrouter'
 import { AppStorageV2, PersistenceV2 } from '@kit.ArkUI'
 import { emitter } from '@kit.BasicServicesKit'
+
+@HMRouter({pageUrl: PAGE_PATH.CART_PAGE})
 
 @ComponentV2
 export struct CartView {
@@ -15,8 +17,11 @@ export struct CartView {
   breakPointClass: AppBreakPoint = AppStorageV2.connect(AppBreakPoint, () => new AppBreakPoint())!
   safeArea: AppSafeArea = AppStorageV2.connect(AppSafeArea, () => new AppSafeArea())!
   @Local cartList: CartGoodsModel[] = []
+  @Local
+  showLeftIcon : boolean = false
 
   aboutToAppear(): void {
+    this.showLeftIcon = HMRouterMgr.getCurrentParam() as boolean;
     this.getCartList()
   }
 
@@ -54,7 +59,7 @@ export struct CartView {
         },
         title: '购物袋',
         showRightIcon: true,
-        showLeftIcon: false
+        showLeftIcon: this.showLeftIcon
       })
         .border({
           width: { bottom: 0.5 },
