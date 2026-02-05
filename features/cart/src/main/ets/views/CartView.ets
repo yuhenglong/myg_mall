@@ -2,11 +2,14 @@ import { HDMGuessGoods, HDMNavBar, HDMUser, CartGoodsModel, AppBreakPoint, AppSa
   PAGE_PATH,
   GlobalVariable,
   getCartListAPI,
-  AppCart} from 'basic'
+  AppCart,
+  updateCartAPI,
+  authCart} from 'basic'
 import { CartItem } from '../components'
 import { HMRouter, HMRouterMgr } from '@hadss/hmrouter'
 import { AppStorageV2, PersistenceV2 } from '@kit.ArkUI'
 import { emitter } from '@kit.BasicServicesKit'
+import { DialogHelper } from '@pura/harmony-dialog'
 
 @HMRouter({pageUrl: PAGE_PATH.CART_PAGE})
 
@@ -76,6 +79,17 @@ export struct CartView {
               ListItem() {
                 CartItem({
                   cart: obj.item,
+                  onChangeCount: async (count: number) => {
+                    const key = DialogHelper.showLoadingDialog({
+                      loadColor:$r('[basic].color.white'),
+                      loadSize:40,
+                      backgroundColor:'#BB000000',
+                      content:'更新中...'
+                    })
+                    await updateCartAPI(obj.item.skuId, { count ,selected:obj.item.selected })
+                    await authCart.updateCartCount() //   更新整体购物车
+                    DialogHelper.closeDialog(key)
+                  },
                   onChangeSelected: async selected => {
 
                   }

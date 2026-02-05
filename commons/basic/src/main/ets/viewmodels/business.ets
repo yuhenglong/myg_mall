@@ -81,3 +81,9 @@ export interface AddCartParams {
   skuId: string
   count: number
 }
+
+// 更新购物车数量的参数
+export interface UpdateCartParams {
+  selected?: boolean
+  count?: number
+}
