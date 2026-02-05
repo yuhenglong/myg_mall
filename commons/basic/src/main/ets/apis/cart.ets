@@ -10,3 +10,5 @@ export const getCartListAPI = () => RequestRcp.get<CartGoodsModel[]>("/member/ca
 export const getCartCountAPI = () => RequestRcp.get<CartCount>('/member/cart/count')
 
 export const updateCartAPI = (skuId: string, data: UpdateCartParams) => RequestRcp.put<null>(`/member/cart/${skuId}`, data)
+// 全选和取消全选
+export const selectOrUnSelectAPI = (data: UpdateCartParams) => RequestRcp.put<null>("/member/cart/selected", data)

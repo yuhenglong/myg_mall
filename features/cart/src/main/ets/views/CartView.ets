@@ -4,7 +4,8 @@ import { HDMGuessGoods, HDMNavBar, HDMUser, CartGoodsModel, AppBreakPoint, AppSa
   getCartListAPI,
   AppCart,
   updateCartAPI,
-  authCart} from 'basic'
+  authCart,
+  selectOrUnSelectAPI} from 'basic'
 import { CartItem } from '../components'
 import { HMRouter, HMRouterMgr } from '@hadss/hmrouter'
 import { AppStorageV2, PersistenceV2 } from '@kit.ArkUI'
@@ -27,13 +28,12 @@ export struct CartView {
 
   aboutToAppear(): void {
     this.showLeftIcon = HMRouterMgr.getCurrentParam() as boolean;
-    // this.getCartList()
   }
 
-  // async getCartList(){
-    // const res = await getCartListAPI()
-    // this.cartList = res
-  // }
+  @Computed
+  get isCheckAll(){
+    return this.appCart.cartList.every(item => item.selected)
+  }
 
   @Builder
   DeleteBuilder(cart: CartGoodsModel) {
@@ -91,7 +91,15 @@ export struct CartView {
                     DialogHelper.closeDialog(key)
                   },
                   onChangeSelected: async selected => {
-
+                    const key = DialogHelper.showLoadingDialog({
+                      loadColor:$r('[basic].color.white'),
+                      loadSize:40,
+                      backgroundColor:'#BB000000',
+                      content:'更新中...'
+                    })
+                    await updateCartAPI(obj.item.skuId, { count : obj.item.count ,selected })
+                    await authCart.updateCartCount() //   更新整体购物车
+                    DialogHelper.closeDialog(key)
                   }
                 })
               }
@@ -143,9 +151,18 @@ export struct CartView {
       if (this.appCart.cartList.length) {
         Row() {
           Checkbox()
+            .select(this.isCheckAll)
             .selectedColor($r('[basic].color.red'))
             .onClick(async () => {
-
+              const key = DialogHelper.showLoadingDialog({
+                loadColor:$r('[basic].color.white'),
+                loadSize:40,
+                backgroundColor:'#BB000000',
+                content:'更新中...'
+              })
+              await selectOrUnSelectAPI({selected: !this.isCheckAll})
+              await authCart.updateCartCount()
+              DialogHelper.closeDialog(key)
             })
           Text('全选')
             .fontSize(14)
