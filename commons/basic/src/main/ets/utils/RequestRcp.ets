@@ -20,7 +20,7 @@ class RcpRequestInterceptor implements rcp.Interceptor {
     }
 
     if (typeof context.request.content === 'object') {
-      context.request.content = JSON.parse(JSON.stringify(context.request.content).replace(/__ob_/,'')) as rcp.RequestContent
+      context.request.content = JSON.parse(JSON.stringify(context.request.content).replace(/__ob_/g,'')) as rcp.RequestContent
     }
     
     return next.handle(context) // 将结构返回下一个执行链
