@@ -62,7 +62,7 @@ export struct CartView {
         })
 
       List() {
-        if (!this.appUser.user.token) {
+        if (this.appUser.user.token) {
 
           if (this.cartList.length) {
             ForEach(this.cartList, (cart: CartGoodsModel) => {

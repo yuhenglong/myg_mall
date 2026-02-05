@@ -36,7 +36,7 @@ export struct GoodsView {
   async addCart(){
     // 判断是否登录
     const user = auth.getUser()
-    if (!user.token) {
+    if (user.token) {
       // 判断是否有skuId
       if (this.sku.id) {
         const key = DialogHelper.showLoadingDialog({
