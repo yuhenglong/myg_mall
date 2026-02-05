@@ -1,4 +1,4 @@
-import { CategoryItem } from "../viewmodels/business";
+import { CartGoodsModel, CategoryItem } from "../viewmodels/business";
 import { BreakPointEnum } from "./break_point";
 import { Type } from "@ohos.arkui.StateManagement";
 
@@ -104,4 +104,6 @@ export interface CartCount {
 export class AppCart {
   @Trace
   count:number = 0
+  @Trace
+  cartList: CartGoodsModel[] = [] // 全局购物车
 }
