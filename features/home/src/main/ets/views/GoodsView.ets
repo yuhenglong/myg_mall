@@ -1,8 +1,10 @@
 import {
   addCartAPI,
   AppBreakPoint,
+  AppCart,
   AppSafeArea,
   auth,
+  authCart,
   HDMGuessGoods,
   HDMNavBar,
   HDMSku,
@@ -22,6 +24,7 @@ import { AlertOptions, DialogHelper, SpinType } from '@pura/harmony-dialog'
 export struct GoodsView {
   breakPointClass: AppBreakPoint = AppStorageV2.connect(AppBreakPoint, () => new AppBreakPoint())!
   safeArea: AppSafeArea = AppStorageV2.connect(AppSafeArea, () => new AppSafeArea())!
+  appCart: AppCart = AppStorageV2.connect(AppCart, () => new AppCart())!
   @Local goods: Goods = {} as Goods
   @Local activeIndex: number = 0
   @Local loading: boolean = false
@@ -56,6 +59,8 @@ export struct GoodsView {
         })
 
         promptAction.showToast({message:'成功加入购物车~' })
+        // 更新购物车数量
+        await authCart.updateCartCount()
         DialogHelper.closeDialog(key)
         this.showSheet = false
       }else {
@@ -289,7 +294,7 @@ export struct GoodsView {
         Image($r('[basic].media.ic_public_comment'))
           .iconButton()
         Badge({
-          count: 0,
+          count: this.appCart.count,
           style: {},
           position: { x: 30, y: 4 }
         }) {

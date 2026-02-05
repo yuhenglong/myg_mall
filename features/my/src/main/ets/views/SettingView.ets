@@ -1,5 +1,5 @@
 import { HMRouter, HMRouterMgr } from '@hadss/hmrouter'
-import { HDMUser, HDMNavBar, HDMCellGroup, HDMCell, PAGE_PATH, AppSafeArea, AppUser, auth } from 'basic'
+import { HDMUser, HDMNavBar, HDMCellGroup, HDMCell, PAGE_PATH, AppSafeArea, AppUser, auth, authCart } from 'basic'
 import { AppStorageV2, PersistenceV2 } from '@kit.ArkUI'
 import { DialogAction, DialogHelper } from '@pura/harmony-dialog'
 
@@ -132,11 +132,13 @@ export struct SettingView {
 
               DialogHelper.showAlertDialog({
                 content: "确认退出登录吗？",
-                onAction: (action) => {
+                onAction: async (action) => {
                   if (action == DialogAction.CANCEL) {
 
                   } else if (action == DialogAction.SURE) {
                     auth.setUser({} as HDMUser)
+                    // 退出登陆后,更新购物车数量
+                    await authCart.updateCartCount()
                     HMRouterMgr.pop()
                   }
                 }

@@ -1,4 +1,4 @@
-import { AppSafeArea, auth, HDMNavBar, PAGE_PATH } from 'basic'
+import { AppSafeArea, auth, authCart, HDMNavBar, PAGE_PATH } from 'basic'
 import { AppStorageV2, promptAction } from '@kit.ArkUI'
 
 import { HMRouter, HMRouterMgr } from '@hadss/hmrouter'
@@ -38,6 +38,8 @@ export struct LoginView {
     }
     const user = await loginAPI(this.loginForm)
     auth.setUser(user) // 储存用户信息
+    // 更新购物车商品总数量
+    await authCart.updateCartCount()
     HMRouterMgr.pop()
   }
 

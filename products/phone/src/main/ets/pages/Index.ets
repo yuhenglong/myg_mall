@@ -1,4 +1,8 @@
-import { AppBreakPoint, AppSafeArea, BreakPointType, GlobalVariable, Logger, PAGE_PATH, TabItem } from 'basic'
+import { AppBreakPoint,
+  AppCart,
+  AppSafeArea,
+  authCart,
+  AuthCart, BreakPointType, GlobalVariable, Logger, PAGE_PATH, TabItem } from 'basic'
 import { CartView } from 'cart'
 import { CategoryView } from 'category'
 import { HomeView } from 'home'
@@ -22,7 +26,11 @@ class MyModifier extends AttributeUpdater<NavigationAttribute> {
 struct Index {
   modifier: MyModifier = new MyModifier() // 专门用来修改Navigation特性对象实例
   breakObj: AppBreakPoint = AppStorageV2.connect(AppBreakPoint,() => new AppBreakPoint())!
+  // 获取安全区域
   safeArea: AppSafeArea = AppStorageV2.connect(AppSafeArea, () => new AppSafeArea())!
+
+  appCart: AppCart = AppStorageV2.connect(AppCart, () => new AppCart())!
+
   controller: TabsController = new TabsController()
 
   @Local
@@ -37,6 +45,11 @@ struct Index {
   aboutToAppear(): void {
     // 注册监听事件(切换tab)
     this.registerEvent()
+    this.getCartCount()
+  }
+
+  getCartCount(){
+    authCart.updateCartCount()
   }
 
   registerEvent(){
@@ -53,12 +66,25 @@ struct Index {
   @Builder
   getTabItemBuilder(item: TabItem, index: number) {
     Column() {
-      Image(this.activeIndex === index ? item.active : item.normal)
-        .width(24)
-        .aspectRatio(1)
-      Text(item.text)// 跨 HSP 访问资源，需要在 oh-package.json5中导入
-        .fontColor($r('[basic].color.black'))
-        .fontSize(12)
+      if (index === 2){
+        Badge({ count : this.appCart.count,style :{} }){
+          Column(){
+            Image(this.activeIndex === index ? item.active : item.normal)
+              .width(24)
+              .aspectRatio(1)
+            Text(item.text)// 跨 HSP 访问资源，需要在 oh-package.json5中导入
+              .fontColor($r('[basic].color.black'))
+              .fontSize(12)
+          }
+        }
+      }else {
+        Image(this.activeIndex === index ? item.active : item.normal)
+          .width(24)
+          .aspectRatio(1)
+        Text(item.text)// 跨 HSP 访问资源，需要在 oh-package.json5中导入
+          .fontColor($r('[basic].color.black'))
+          .fontSize(12)
+      }
     }
     .justifyContent(FlexAlign.SpaceEvenly)
     .height(50)
