@@ -5,13 +5,13 @@
         "name": "default",
         "type": "HarmonyOS",
         "material": {
-          "certpath": "/Users/yuhenglong/.ohos/config/default_myg_mall2_fHlBpx-JPtKbQsJpLsYFmcTmmIg-vucGKdp69ROJ-QI=.cer",
-          "keyAlias": "debugKey",
-          "keyPassword": "0000001B76DCB22D3958B11E378082751DE977464243D2DD4ECF618D8E4C228E61600FECC08E8CBBCA945E",
-          "profile": "/Users/yuhenglong/.ohos/config/default_myg_mall2_fHlBpx-JPtKbQsJpLsYFmcTmmIg-vucGKdp69ROJ-QI=.p7b",
+          "storeFile": "/Users/yuhenglong/OtherFiles/myg_cer/meikou_pre.p12",
+          "storePassword": "000000197848A8F4FC890B0A45CF489232620008AE40F6F881764E05D1C21AA4EEBEF76843466B917E",
+          "keyAlias": "meikou_pre",
+          "keyPassword": "000000190403D886E0425263A1394DE99AC9A92AD900D46BE4FE51C92AF5844541C15098A9CD8DE6FB",
           "signAlg": "SHA256withECDSA",
-          "storeFile": "/Users/yuhenglong/.ohos/config/default_myg_mall2_fHlBpx-JPtKbQsJpLsYFmcTmmIg-vucGKdp69ROJ-QI=.p12",
-          "storePassword": "0000001BFCEB262D1452A027195C1C9A7D9E41E6202CDCBD99D7BC117BD2C3E3009C2F23E2324FF3FCCAA6"
+          "profile": "/Users/yuhenglong/OtherFiles/myg_cer/meikou_oneDebug.p7b",
+          "certpath": "/Users/yuhenglong/OtherFiles/myg_cer/meikou_one.cer"
         }
       }
     ],
