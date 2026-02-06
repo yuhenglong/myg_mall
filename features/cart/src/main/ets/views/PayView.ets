@@ -1,5 +1,5 @@
 import { HMRouter, HMRouterMgr } from "@hadss/hmrouter";
-import { AppSafeArea, GlobalVariable, PAGE_PATH } from "basic";
+import { AppSafeArea, GlobalVariable, Logger, PAGE_PATH } from "basic";
 import { webview } from "@kit.ArkWeb";
 import { AppStorageV2 } from "@kit.ArkUI";
 import { DialogHelper } from "@pura/harmony-dialog";
@@ -33,6 +33,9 @@ export struct PayView {
         src: `${GlobalVariable.BASE_URL}/pay/wap/aliPay?orderId=${this.orderId}`,
         controller: this.controller
       })
+        .onPageBegin((event) => {
+          Logger.info({ e: event.url })
+        })
         .onPageEnd(() => {
           setTimeout(() => {
             DialogHelper.closeDialog(this.dialogKey)

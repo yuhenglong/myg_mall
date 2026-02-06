@@ -10,4 +10,5 @@ export class PAGE_PATH {
   static readonly CART_PAGE: string = "CartView" // 购物车页面
   static readonly CHECK_PAGE: string = "CheckView" // 核对订单页面
   static readonly PAY_PAGE: string = "PayView" // 支付页面
+  static readonly PAY_RESULT_PAGE: string = "PayResultView" // 支付页面
 }
