@@ -14,6 +14,7 @@ import {
 } from 'basic'
 import { AppStorageV2, promptAction } from '@kit.ArkUI'
 import { HMRouter, HMRouterMgr } from '@hadss/hmrouter'
+import { DialogHelper } from '@pura/harmony-dialog'
 
 
 @HMRouter({ pageUrl: PAGE_PATH.CHECK_PAGE })
@@ -44,7 +45,6 @@ export struct CheckView {
     }
     this.loading = true
     // 调用创建订单接口
-    // 调用创建订单接口
     const result = await createOrderAPI({
       goods: this.goodsList,
       deliveryTimeType: 1,
@@ -54,6 +54,13 @@ export struct CheckView {
       addressId: this.addressId
     })
     promptAction.showToast({ message: result.id }) // 唤起支付宝支付 -支付宝支付没有沙箱环境的sdk h5支付
+    // 唤起支付宝支付 - 支付宝没有沙箱环境的sdk,h5支付
+    HMRouterMgr.push({
+      pageUrl: PAGE_PATH.PAY_PAGE,
+      param: result.id
+    })
+    // 关闭半模态弹窗
+    this.showPaySheet = false
   }
 
   @Builder
