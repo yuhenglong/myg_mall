@@ -9,7 +9,8 @@ import {
   CreateOrderParamsGoods,
   PAGE_PATH,
   authCart,
-  AppSafeArea
+  AppSafeArea,
+  createOrderAPI
 } from 'basic'
 import { AppStorageV2, promptAction } from '@kit.ArkUI'
 import { HMRouter, HMRouterMgr } from '@hadss/hmrouter'
@@ -43,6 +44,16 @@ export struct CheckView {
     }
     this.loading = true
     // 调用创建订单接口
+    // 调用创建订单接口
+    const result = await createOrderAPI({
+      goods: this.goodsList,
+      deliveryTimeType: 1,
+      payType: 1,
+      buyerMessage: '', // 买家留言
+      payChannel: 1,
+      addressId: this.addressId
+    })
+    promptAction.showToast({ message: result.id }) // 唤起支付宝支付 -支付宝支付没有沙箱环境的sdk h5支付
   }
 
   @Builder

@@ -1,5 +1,7 @@
 import { CartCount, DeleteCartParams, RequestRcp } from "../utils";
-import { AddCartParams, CartGoodsModel, PreOrder, UpdateCartParams } from "../viewmodels";
+import { AddCartParams, CartGoodsModel, CreateOrderParams,
+  CreateOrderResult,
+  PreOrder, UpdateCartParams } from "../viewmodels";
 
 
 export const addCartAPI = (data: AddCartParams) => RequestRcp.post<null>("/member/cart", data)
@@ -16,5 +18,9 @@ export const selectOrUnSelectAPI = (data: UpdateCartParams) => RequestRcp.put<nu
 export const delCartAPI = (data: DeleteCartParams) => RequestRcp.delete<null>("/member/cart", undefined, data)
 
 // 获取结算信息
-
 export const getPreOrderAPI = () =>  RequestRcp.get<PreOrder>(`/member/order/pre`)
+
+// 下单API
+export const createOrderAPI = (data: CreateOrderParams) => {
+  return RequestRcp.post<CreateOrderResult>("/member/order", data)
+}
