@@ -207,7 +207,9 @@ export struct CartView {
             .height(36)
             .backgroundColor($r('[basic].color.red'))
             .onClick(() => {
-
+              HMRouterMgr.push({
+                pageUrl: PAGE_PATH.CHECK_PAGE
+              })
             })
         }
         .height(50)
