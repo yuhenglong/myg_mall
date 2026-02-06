@@ -34,7 +34,18 @@ export struct PayView {
         controller: this.controller
       })
         .onPageBegin((event) => {
-          Logger.info({ e: event.url })
+          if (event.url.includes('pay/redirect?payResult')){
+            // 清除路由栈
+            HMRouterMgr.getPathStack(PAGE_PATH.MAIN_PAGE_ID)?.clear()
+            // 跳转到支付结果页面
+            HMRouterMgr.push({
+              pageUrl: PAGE_PATH.PAY_RESULT_PAGE,
+              param: {
+                orderId: this.orderId,
+                payResult: event.url.includes("payResult=true")
+              }
+            })
+          }
         })
         .onPageEnd(() => {
           setTimeout(() => {
