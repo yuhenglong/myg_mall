@@ -2,6 +2,8 @@ import { HMRouter, HMRouterMgr } from '@hadss/hmrouter'
 import { HDMUser, HDMNavBar, HDMCellGroup, HDMCell, PAGE_PATH, AppSafeArea, AppUser, auth, authCart } from 'basic'
 import { AppStorageV2, PersistenceV2 } from '@kit.ArkUI'
 import { DialogAction, DialogHelper } from '@pura/harmony-dialog'
+import common from '@ohos.app.ability.common'
+import { Want } from '@kit.AbilityKit'
 
 
 @HMRouter({ pageUrl: PAGE_PATH.SETTING_PAGE })
@@ -107,7 +109,20 @@ export struct SettingView {
                 pageUrl: PAGE_PATH.PRIVATE_VIEW
               })
             })
-          HDMCell({ title: '消息设置' })
+          HDMCell({ title: '跳转到设置app' })
+            .onClick(() => {
+              const want: Want = {
+                bundleName: 'com.huawei.hmos.settings',
+                abilityName: 'com.huawei.hmos.settings.MainAbility',
+                uri: 'application_info_entry',
+                parameters: {
+                  // 修改成你的应用包名
+                  pushParams: 'com.itcast.mg_mall'
+                }
+              }
+              const ctx = getContext(this) as common.UIAbilityContext
+              ctx.startAbility(want)
+            })
           HDMCell({ title: '隐私设置' })
           HDMCell({ title: '通用设置' })
         }
