@@ -11,6 +11,10 @@
     {
       "name": "EntryAbility_label",
       "value": "美优购商城"
+    },
+    {
+      "name": "mic_reason",
+      "value": "用于美优购商城语音搜索"
     }
   ]
 }

@@ -1,6 +1,7 @@
 import { AppSafeArea, PAGE_PATH } from 'basic'
 import { AppStorageV2 } from '@kit.ArkUI'
 import { HMRouter, HMRouterMgr } from '@hadss/hmrouter'
+import { HDMAudioSearch } from '../components/HDMAudioSearch'
 
 @HMRouter({ pageUrl : PAGE_PATH.SEARCH_PAGE })
 
@@ -50,6 +51,7 @@ export struct SearchView {
       })
 
       // 语音搜索组件
+      HDMAudioSearch()
     }
   }
 }

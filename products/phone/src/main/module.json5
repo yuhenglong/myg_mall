@@ -10,6 +10,14 @@
       },
       {
         "name": "ohos.permission.GET_NETWORK_INFO"
+      },
+      {
+        "name": "ohos.permission.MICROPHONE",
+        "reason": "$string:mic_reason",
+        "usedScene": {
+          "when": "always",
+          "abilities": ["PhoneAbility"]
+        }
       }
     ],
     "deviceTypes": [
