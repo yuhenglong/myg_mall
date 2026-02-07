@@ -5,13 +5,13 @@
         "name": "default",
         "type": "HarmonyOS",
         "material": {
-          "storeFile": "/Users/yuhenglong/OtherFiles/myg_cer/meikou_pre.p12",
-          "storePassword": "000000197848A8F4FC890B0A45CF489232620008AE40F6F881764E05D1C21AA4EEBEF76843466B917E",
+          "certpath": "/Users/yuhenglong/OtherFiles/myg_cer/meikou_one.cer",
           "keyAlias": "meikou_pre",
-          "keyPassword": "000000190403D886E0425263A1394DE99AC9A92AD900D46BE4FE51C92AF5844541C15098A9CD8DE6FB",
-          "signAlg": "SHA256withECDSA",
+          "keyPassword": "0000001988A6AF755AF1A234E4DF701610FB7972EA132609C8ED08BAE5BCD1251033508F078FABA6A7",
           "profile": "/Users/yuhenglong/OtherFiles/myg_cer/meikou_oneDebug.p7b",
-          "certpath": "/Users/yuhenglong/OtherFiles/myg_cer/meikou_one.cer"
+          "signAlg": "SHA256withECDSA",
+          "storeFile": "/Users/yuhenglong/OtherFiles/myg_cer/meikou_pre.p12",
+          "storePassword": "0000001963A67476867CAF8336A7CD8BF57AB484AB7FE0C919F4F0A6E18D39FB29753AD76C62747A62"
         }
       }
     ],
