@@ -101,7 +101,12 @@ export struct SettingView {
             }
           })
 
-          HDMCell({ title: '账号安全' })
+          HDMCell({ title: '语音播报' })
+            .onClick(() => {
+              HMRouterMgr.push({
+                pageUrl: PAGE_PATH.PRIVATE_VIEW
+              })
+            })
           HDMCell({ title: '消息设置' })
           HDMCell({ title: '隐私设置' })
           HDMCell({ title: '通用设置' })
