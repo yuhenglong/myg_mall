@@ -51,7 +51,17 @@ export struct SearchView {
       })
 
       // 语音搜索组件
-      HDMAudioSearch()
+      HDMAudioSearch({
+        onComplete: (keyword) => {
+          this.keyword = keyword
+          HMRouterMgr.push({
+            pageUrl: PAGE_PATH.SEARCH_RESULT_PAGE,
+            param: {
+              keyword: this.keyword
+            }
+          })
+        }
+      })
     }
   }
 }

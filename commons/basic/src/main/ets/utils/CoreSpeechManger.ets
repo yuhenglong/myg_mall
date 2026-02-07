@@ -5,7 +5,11 @@ export class CoreSpeechManager {
   asrEngine: speechRecognizer.SpeechRecognitionEngine | null = null // 语音识别引擎
   // 引擎得提前初始化 -录音已经有buffer 你说了一句你好 需要保证此时语音识别引擎已经准备好了
   sessionId: string = Date.now().toString() // 必须是数字字符串
-  async initEngine() {
+  // 把转换出的文字传递给调用处
+  resultCallBack?: (content: string) => void
+
+  async initEngine(callBack: (content: string) => void) {
+    this.resultCallBack = callBack // 将外界传入的函数赋值给本身的一个函数
 
     // 创建引擎，通过callback形式返回
     // 设置创建引擎参数
@@ -36,7 +40,9 @@ export class CoreSpeechManager {
       // 识别结果回调，包括中间结果和最终结果
       onResult(sessionId: string, result: speechRecognizer.SpeechRecognitionResult) {
         Logger.info(result.result)
-        console.info(`onResult, sessionId: ${sessionId} sessionId: ${JSON.stringify(result)}`);
+        // 回传文本
+        this.self.resultCallBack?.(result.result)
+        // console.info(`onResult, sessionId: ${sessionId} sessionId: ${JSON.stringify(result)}`);
       },
       // 识别完成回调
       onComplete(sessionId: string, eventMessage: string) {

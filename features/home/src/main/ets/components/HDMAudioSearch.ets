@@ -19,10 +19,11 @@ export struct HDMAudioSearch {
   // 开始录音
   async startRecord() {
     accessManager.checkPermission(["ohos.permission.MICROPHONE"],async () => {
-      // promptAction.showToast({ message: '可以开始录音了' })
       this.voiceState = VoiceState.VOICING
-      // 先初始化语音识别引擎
-      await coreSpeechManager.initEngine()
+      // promptAction.showToast({ message: '可以开始录音了' })
+      await coreSpeechManager.initEngine((content) => {
+        this.keyword = content
+      }) // 先初始化引擎
 
       audioCapturerManager.start((bf) => {
         // Logger.info("录音中-" + bf.byteLength)
@@ -36,9 +37,12 @@ export struct HDMAudioSearch {
 
   // 结束录音
   async closeRecord() {
+    // 将文本替换特殊字符
+    this.onComplete(this.keyword.replace(/[^\p{L}\p{N}\s]/gu, '')) // 语音识别结果传到三层组件
+    this.keyword = ""
+    this.voiceState = VoiceState.DEFAULT
     await audioCapturerManager.stop() // 停止录音
-    coreSpeechManager.stopTransVoice() // 停止语音分析
-    this.voiceState = VoiceState.VOICING
+    coreSpeechManager.stopTransVoice() // 停止语音分
   }
 
   aboutToAppear() {
