@@ -1,5 +1,5 @@
 import { KeyboardAvoidMode, promptAction } from '@kit.ArkUI'
-import { accessManager } from 'basic'
+import { accessManager, audioCapturerManager, Logger } from 'basic'
 
 export enum VoiceState {
   DEFAULT,
@@ -19,10 +19,11 @@ export struct HDMAudioSearch {
   // 开始录音
   async startRecord() {
     accessManager.checkPermission(["ohos.permission.MICROPHONE"], () => {
-      promptAction.showToast({ message: '可以开始录音了' })
-      // audioCapturerManager.start((bf) => {
-      //   HDMLog.info("录音中-" + bf.byteLength)
-      // })
+      // promptAction.showToast({ message: '可以开始录音了' })
+      this.voiceState = VoiceState.VOICING
+      audioCapturerManager.start((bf) => {
+        Logger.info("录音中-" + bf.byteLength)
+      })
     }, () => {
       promptAction.showToast({ message: '您当前没有开启权限，无法使用语音功能' })
     })
@@ -30,7 +31,9 @@ export struct HDMAudioSearch {
 
   // 结束录音
   async closeRecord() {
-
+    await audioCapturerManager.stop() // 停止录音
+    this.voiceState = VoiceState.VOICING
+    // coreSpeechManager.stopTransVoice() // 停止语音分析
   }
 
   aboutToAppear() {
