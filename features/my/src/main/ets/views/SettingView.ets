@@ -123,7 +123,12 @@ export struct SettingView {
               const ctx = getContext(this) as common.UIAbilityContext
               ctx.startAbility(want)
             })
-          HDMCell({ title: '隐私设置' })
+          HDMCell({ title: '去地图' })
+            .onClick(() => {
+              HMRouterMgr.push({
+                pageUrl: PAGE_PATH.MAP_VIEW
+              })
+            })
           HDMCell({ title: '通用设置' })
         }
 

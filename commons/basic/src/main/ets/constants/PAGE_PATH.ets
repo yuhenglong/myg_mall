@@ -12,4 +12,5 @@ export class PAGE_PATH {
   static readonly PAY_PAGE: string = "PayView" // 支付页面
   static readonly PAY_RESULT_PAGE: string = "PayResultView" // 支付页面
   static readonly PRIVATE_VIEW: string = 'PrivateView' // 语音播报页面
+  static readonly MAP_VIEW: string = 'MAPView' // 地图页面
 }
