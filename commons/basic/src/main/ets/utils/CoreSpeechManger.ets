@@ -27,6 +27,7 @@ export class CoreSpeechManager {
 
   // 设置监听回调
   private setListener() {
+    let self = this;
     // 创建回调对象
     let setListener: speechRecognizer.RecognitionListener = {
       // 开始识别成功回调
@@ -39,10 +40,10 @@ export class CoreSpeechManager {
       },
       // 识别结果回调，包括中间结果和最终结果
       onResult(sessionId: string, result: speechRecognizer.SpeechRecognitionResult) {
-        Logger.info(result.result)
+        Logger.info({res: result.result})
         // 回传文本
-        this.self.resultCallBack?.(result.result)
-        // console.info(`onResult, sessionId: ${sessionId} sessionId: ${JSON.stringify(result)}`);
+        self.resultCallBack?.(result.result)
+        console.info(`onResult, sessionId: ${sessionId} sessionId: ${JSON.stringify(result)}`);
       },
       // 识别完成回调
       onComplete(sessionId: string, eventMessage: string) {
